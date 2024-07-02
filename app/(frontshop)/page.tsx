@@ -9,7 +9,6 @@ const HomePage = async () => {
     getProducts({ isFeatured: true }),
     getBillboard('c49e431e-e2ab-4fd7-a7ae-35655f8849f9'),
   ]);
-  console.log(111);
 
   return (
     <Container>

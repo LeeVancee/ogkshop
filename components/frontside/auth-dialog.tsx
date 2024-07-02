@@ -23,8 +23,8 @@ export function AuthDialog() {
     formState: { errors: loginErrors },
   } = useForm<FieldValues>({
     defaultValues: {
-      email: '111@111.com',
-      password: '123456',
+      email: '',
+      password: '',
     },
   });
 

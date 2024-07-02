@@ -1,5 +1,5 @@
 'use client';
-import { LogOut, LayoutDashboard } from 'lucide-react';
+import { LogOut, LayoutDashboard, ShoppingBag } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -51,7 +51,11 @@ export function DropDown({ user }: DropDownProps) {
               </DropdownMenuItem>
             </>
           )}
-
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => router.push('/myorders')}>
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            My Orders
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => signOut()}>
             <LogOut className="mr-2 h-4 w-4" />

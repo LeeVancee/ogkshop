@@ -27,7 +27,6 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       },
     },
   });
-  console.log(111);
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
