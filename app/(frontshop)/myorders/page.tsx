@@ -46,20 +46,26 @@ export default async function OrdersPage() {
   }));
 
   return (
-    <Container>
+    <Container className="min-h-screen">
       <div className="flex flex-col gap-y-4">
-        {formattedOrders.map((order) => (
-          <OrderCard
-            key={order.id}
-            id={order.id}
-            phone={order.phone}
-            address={order.address}
-            products={order.products}
-            totalPrice={order.totalPrice}
-            isPaid={order.isPaid}
-            createdAt={order.createdAt}
-          />
-        ))}
+        {formattedOrders.length > 0 ? (
+          formattedOrders.map((order) => (
+            <OrderCard
+              key={order.id}
+              id={order.id}
+              phone={order.phone}
+              address={order.address}
+              products={order.products}
+              totalPrice={order.totalPrice}
+              isPaid={order.isPaid}
+              createdAt={order.createdAt}
+            />
+          ))
+        ) : (
+          <div className="flex justify-center items-center h-full pt-20">
+            <p className="text-xl">No Orders!</p>
+          </div>
+        )}
       </div>
     </Container>
   );

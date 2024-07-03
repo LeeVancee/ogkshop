@@ -19,7 +19,7 @@ const Billboard = ({ data }: BillboardProps) => {
         />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center gap-y-8  bg-opacity-50">
           <div className="font-bold text-3xl sm:text-5xl lg:text-6xl sm:max-w-xl max-w-xs text-white">
-            {data?.label}
+            {/* {data?.label} */}
           </div>
         </div>
       </div>

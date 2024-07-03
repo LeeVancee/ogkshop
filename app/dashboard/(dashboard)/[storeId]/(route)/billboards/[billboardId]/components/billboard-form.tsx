@@ -72,7 +72,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
       router.refresh();
-      router.push(`/${params.storeId}/billboards`);
+      router.push(`/dashboard/${params.storeId}/billboards`);
       toast.success('Billboard deleted.');
     } catch (error: any) {
       toast.error('Make sure you removed all categories using this billboard first.');

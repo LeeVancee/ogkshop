@@ -30,7 +30,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const isCorrectPassword = await bcrypt.compare(credentials.password as string, user.password);
 
         if (!isCorrectPassword) {
-          throw new Error('Invalid credentials');
+          console.log('Password correct:', isCorrectPassword);
+          throw new Error('password is incorrect');
         }
 
         if (!user) {

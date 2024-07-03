@@ -100,7 +100,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
       router.refresh();
-      router.push(`/${params.storeId}/products`);
+      router.push(`/dashboard/${params.storeId}/products`);
       toast.success('Product deleted.');
     } catch (error: any) {
       toast.error('Something went wrong.');

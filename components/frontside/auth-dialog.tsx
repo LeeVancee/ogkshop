@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -11,27 +10,21 @@ import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useActiveTabStore } from '@/hooks/use-activeTab';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export function AuthDialog() {
   const { activeTab, changeActiveTab } = useActiveTabStore();
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('USER'); // 设置默认角色为 USER
-
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
   } = useForm<FieldValues>({
     defaultValues: {
-      email: '111@111.com',
-      password: '123456',
+      email: '',
+      password: '',
     },
   });
 
@@ -46,11 +39,11 @@ export function AuthDialog() {
       password: '',
     },
   });
-
   const onLoginSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    await signIn('store-credentials', { ...data, redirect: false })
+    await signIn('credentials', { ...data, redirect: false })
       .then((callback) => {
+        console.log(callback);
         if (callback?.error) {
           toast.error('Invalid credentials');
         }
@@ -84,7 +77,7 @@ export function AuthDialog() {
       }
     } finally {
       setIsLoading(false);
-      // changeActiveTab('login');
+      changeActiveTab('login');
     }
   };
 
@@ -135,17 +128,16 @@ export function AuthDialog() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full">
-                        {role}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => setRole('USER')}>User</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setRole('ADMIN')}>Admin</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+
+                  <Select onValueChange={(value) => setRole(value)}>
+                    <SelectTrigger id="role" aria-label="Role">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USER">User</SelectItem>
+                      <SelectItem value="ADMIN">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   Sign Up

@@ -1,9 +1,10 @@
 interface ContainerProps {
   children: React.ReactNode;
+  className?: string; // Optional className prop to pass additional classes
 }
 
-const Container = ({ children }: ContainerProps) => {
-  return <div className="mx-auto max-w-7xl">{children}</div>;
+const Container = ({ children, className }: ContainerProps) => {
+  return <div className={`mx-auto max-w-7xl ${className}`}>{children}</div>;
 };
 
 export default Container;
