@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useState } from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -7,15 +9,20 @@ import { Input } from '@/components/ui/input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useActiveTabStore } from '@/hooks/use-activeTab';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 
 export function AuthDialog() {
   const { activeTab, changeActiveTab } = useActiveTabStore();
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [role, setRole] = useState('USER'); // 设置默认角色为 USER
 
   const {
     register: registerLogin,
@@ -23,28 +30,26 @@ export function AuthDialog() {
     formState: { errors: loginErrors },
   } = useForm<FieldValues>({
     defaultValues: {
-      email: '',
-      password: '',
+      email: '111@111.com',
+      password: '123456',
     },
   });
 
   const {
     register: registerSignUp,
     handleSubmit: handleSignUpSubmit,
-    setValue: setSignUpValue,
     formState: { errors: signUpErrors },
   } = useForm<FieldValues>({
     defaultValues: {
       name: '',
       email: '',
       password: '',
-      role: 'USER', // 默认值
     },
   });
 
   const onLoginSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    await signIn('credentials', { ...data, redirect: false })
+    await signIn('store-credentials', { ...data, redirect: false })
       .then((callback) => {
         if (callback?.error) {
           toast.error('Invalid credentials');
@@ -64,8 +69,12 @@ export function AuthDialog() {
 
   const onSignUpSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
+
+    // 添加 role 字段到数据中
+    const submitData = { ...data, role };
+
     try {
-      await axios.post(`/api/user/register`, data);
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/register`, submitData);
       toast.success('Successfully created account! redirecting to login...');
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
@@ -75,8 +84,7 @@ export function AuthDialog() {
       }
     } finally {
       setIsLoading(false);
-      changeActiveTab('login');
-      console.log(data);
+      // changeActiveTab('login');
     }
   };
 
@@ -127,15 +135,17 @@ export function AuthDialog() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
-                  <Select onValueChange={(value) => setSignUpValue('role', value)}>
-                    <SelectTrigger id="role" aria-label="Role">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USER">User</SelectItem>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full">
+                        {role}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => setRole('USER')}>User</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setRole('ADMIN')}>Admin</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   Sign Up

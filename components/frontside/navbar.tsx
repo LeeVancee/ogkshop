@@ -1,29 +1,12 @@
 import Link from 'next/link';
-
 import MainNav from './main-nav';
 import Container from '@/components/ui/container';
 import NavbarActions from './navbar-actions';
 import getCategories from '@/actions/get-categories';
-import { Button } from '../ui/button';
 import { DropDown } from './DropDown';
-import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
 
 const Navbar = async () => {
   const categories = await getCategories();
-  const session = await auth();
-
-  const userId = session?.user.id;
-
-  const user = await prismadb.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <div className="border-b">
@@ -34,7 +17,7 @@ const Navbar = async () => {
           </Link>
           <MainNav data={categories} />
           <div className="ml-auto flex items-center gap-x-4">
-            <DropDown user={user} />
+            <DropDown />
             <NavbarActions />
           </div>
         </div>
