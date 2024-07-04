@@ -12,7 +12,6 @@ const Summary = () => {
   const searchParams = useSearchParams();
   const items = useCart((state) => state.items);
   const removeAll = useCart((state) => state.removeAll);
-  // const { user } = useUser();
   const session = useSession();
   const user = session.data?.user;
 

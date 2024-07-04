@@ -53,6 +53,7 @@ export type OrderColumn = {
   id: string;
   phone: string;
   address: string;
+  image: string;
   isPaid: boolean;
   totalPrice: string;
   products: string;
