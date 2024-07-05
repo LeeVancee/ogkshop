@@ -32,10 +32,10 @@ export const CellAction = ({ data }: CellActionProps) => {
     try {
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/orders/${data.id}`);
-      toast.success('Billboard deleted.');
+      toast.success('Order deleted.');
       router.refresh();
     } catch (error) {
-      toast.error('Make sure you removed all categories using this billboard first.');
+      toast.error('Make sure you removed all categories using this order first.');
     } finally {
       setOpen(false);
       setLoading(false);
