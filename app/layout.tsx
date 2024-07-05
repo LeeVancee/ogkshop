@@ -7,7 +7,7 @@ const sourseSan = localFont({
   src: '../fonts/SourceHanSansSC-VF.otf.woff2',
 });
 export const metadata: Metadata = {
-  title: 'doroshop',
+  title: 'OGKSHOP',
   description: 'explore the world of digital goods',
 };
 
