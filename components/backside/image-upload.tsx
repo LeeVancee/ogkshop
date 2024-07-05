@@ -43,7 +43,7 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
           </div>
         ))}
       </div>
-      <CldUploadWidget onSuccess={onUpload} uploadPreset="br3zkub1">
+      <CldUploadWidget onUpload={onUpload} uploadPreset="br3zkub1">
         {({ open }) => {
           const onClick = () => {
             open();
