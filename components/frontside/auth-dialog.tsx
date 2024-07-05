@@ -134,7 +134,7 @@ export function AuthDialog() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="USER">User</SelectItem>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
+                      {/* <SelectItem value="ADMIN">Admin</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </div>
