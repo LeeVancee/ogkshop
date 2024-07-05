@@ -16,6 +16,9 @@ import { Button } from '../ui/button';
 
 export function DropDown() {
   const { data: session } = useSession();
+  const logout = () => {
+    signOut({ callbackUrl: '/login' });
+  };
   if (session) {
     return (
       <DropdownMenu>
@@ -36,7 +39,7 @@ export function DropDown() {
           </DropdownMenuLabel>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
             <LogOut className="mr-2 h-4 w-4" />
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
