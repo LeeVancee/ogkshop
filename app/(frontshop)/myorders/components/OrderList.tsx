@@ -7,8 +7,6 @@ interface OrderListProps {
   orders: OrderColumn[];
 }
 export default function OrderList({ orders }: OrderListProps) {
-  console.log('orders', orders);
-
   return (
     <div className="flex flex-col gap-y-4">
       {orders.length > 0 ? (

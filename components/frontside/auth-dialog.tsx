@@ -43,7 +43,6 @@ export function AuthDialog() {
     setIsLoading(true);
     await signIn('credentials', { ...data, redirect: false })
       .then((callback) => {
-        console.log(callback);
         if (callback?.error) {
           toast.error('Invalid credentials');
         }
@@ -67,8 +66,9 @@ export function AuthDialog() {
     const submitData = { ...data, role };
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/register`, submitData);
+      await axios.post(`/api/user/register`, submitData);
       toast.success('Successfully created account! redirecting to login...');
+      changeActiveTab('login');
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         toast.error('Email already registered');
@@ -77,7 +77,6 @@ export function AuthDialog() {
       }
     } finally {
       setIsLoading(false);
-      changeActiveTab('login');
     }
   };
 
