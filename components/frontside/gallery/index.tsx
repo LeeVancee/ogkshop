@@ -7,6 +7,9 @@ import { Image } from '@/types';
 
 import GalleryTab from './gallery-tab';
 
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
+
 interface GalleryProps {
   images: Image[];
 }
@@ -24,8 +27,16 @@ const Gallery = ({ images = [] }: GalleryProps) => {
       <TabPanels className="aspect-square w-full">
         {images.map((image) => (
           <TabPanel key={image.id}>
-            <div className="aspect-square relative h-full w-full sm:rounded-lg overflow-hidden">
-              <NextImage fill src={image.url} alt="Image" className="object-cover object-center" />
+            <div className="aspect-square relative h-full w-full sm:rounded-lg ">
+              <Zoom>
+                <NextImage
+                  width={592}
+                  height={592}
+                  src={image.url}
+                  alt="Image"
+                  className="object-cover object-center"
+                />
+              </Zoom>
             </div>
           </TabPanel>
         ))}
