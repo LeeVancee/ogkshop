@@ -29,7 +29,7 @@ const formSchema = z.object({
   sizeId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
-  quantity: z.number().min(1), // 添加数量字段的验证
+  quantity: z.coerce.number().min(1),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -61,6 +61,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
     ? {
         ...initialData,
         price: parseFloat(String(initialData?.price)),
+        quantity: parseInt(String(initialData?.quantity)),
       }
     : {
         name: '',

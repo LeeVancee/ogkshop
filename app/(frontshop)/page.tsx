@@ -4,11 +4,10 @@ import ProductList from '@/components/frontside/product-list';
 import Billboard from '@/components/frontside/billboard';
 import Container from '@/components/ui/container';
 
+const billboardId = process.env.NEXT_PUBLIC_BILLBOARD_ID;
+
 const HomePage = async () => {
-  const [products, billboard] = await Promise.all([
-    getProducts({ isFeatured: true }),
-    getBillboard('51905919-cd2b-4f0f-ae2a-4f254aff798c'),
-  ]);
+  const [products, billboard] = await Promise.all([getProducts({ isFeatured: true }), getBillboard(billboardId!)]);
 
   return (
     <Container>
