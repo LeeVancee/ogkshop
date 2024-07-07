@@ -15,9 +15,13 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request, { params }: { params: { storeId: string } }) {
-  const { productIds } = await req.json();
+  const { productIds, quantities } = await req.json();
   if (!productIds || productIds.length === 0) {
     return new NextResponse('Product ids are required', { status: 400 });
+  }
+
+  if (!quantities || quantities.length !== productIds.length) {
+    return new NextResponse('Quantities are required and should match the number of product ids', { status: 400 });
   }
 
   const products = await prismadb.product.findMany({
@@ -30,9 +34,9 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-  products.forEach((product) => {
+  products.forEach((product, index) => {
     line_items.push({
-      quantity: 1,
+      quantity: quantities[index],
       price_data: {
         currency: 'USD',
         product_data: {
@@ -42,6 +46,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       },
     });
   });
+
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
     return new NextResponse('Authorization header is missing', { status: 401 });
@@ -57,12 +62,13 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       storeId: params.storeId,
       isPaid: false,
       orderItems: {
-        create: productIds.map((productId: string) => ({
+        create: productIds.map((productId: string, index: number) => ({
           product: {
             connect: {
               id: productId,
             },
           },
+          quantity: quantities[index],
         })),
       },
     },

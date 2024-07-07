@@ -75,6 +75,7 @@ model Product {
   price      Float
   isFeatured Boolean     @default(false)
   isArchived Boolean     @default(false)
+  quantity   Int         @default(1)
   sizeId     String
   size       Size        @relation(fields: [sizeId], references: [id])
   colorId    String
@@ -113,6 +114,7 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
 
   @@index([orderId])
   @@index([productId])

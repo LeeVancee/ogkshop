@@ -72,7 +72,7 @@ export async function PATCH(req: Request, { params }: { params: { productId: str
 
     const body = await req.json();
 
-    const { name, price, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
+    const { name, price, categoryId, images, colorId, sizeId, isFeatured, isArchived, quantity } = body;
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -106,6 +106,10 @@ export async function PATCH(req: Request, { params }: { params: { productId: str
       return new NextResponse('Size id is required', { status: 400 });
     }
 
+    if (!quantity) {
+      return new NextResponse('Quantity is required', { status: 400 });
+    }
+
     const storeByUserId = await prismadb.store.findFirst({
       where: {
         id: params.storeId,
@@ -127,6 +131,7 @@ export async function PATCH(req: Request, { params }: { params: { productId: str
         categoryId,
         colorId,
         sizeId,
+        quantity, // 添加 quantity 字段
         images: {
           deleteMany: {},
         },

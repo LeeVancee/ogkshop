@@ -40,9 +40,10 @@ export default async function OrdersPage() {
     address: item.address,
     products: item.orderItems.map((orderItem) => orderItem.product.name).join(', '),
     image: item.orderItems[0].product.images[0].url,
+
     totalPrice: formatter.format(
-      item.orderItems.reduce((total, item) => {
-        return total + Number(item.product.price);
+      item.orderItems.reduce((total, orderItem) => {
+        return total + orderItem.product.price * orderItem.quantity;
       }, 0)
     ),
 

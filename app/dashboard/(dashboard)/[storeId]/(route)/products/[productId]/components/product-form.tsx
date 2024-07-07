@@ -29,6 +29,7 @@ const formSchema = z.object({
   sizeId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
+  quantity: z.number().min(1), // 添加数量字段的验证
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -70,6 +71,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
         sizeId: '',
         isFeatured: false,
         isArchived: false,
+        quantity: 1,
       };
 
   const form = useForm<ProductFormValues>({
@@ -252,6 +254,17 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
+                  <Input {...field} type="number" placeholder="Enter product quantity" disabled={loading} />
                   <FormMessage />
                 </FormItem>
               )}

@@ -10,7 +10,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
     const body = await req.json();
 
-    const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived } = body;
+    const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived, quantity } = body;
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -40,6 +40,10 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       return new NextResponse('Size id is required', { status: 400 });
     }
 
+    if (!quantity) {
+      return new NextResponse('Quantity is required', { status: 400 });
+    }
+
     if (!params.storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
@@ -61,6 +65,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         price,
         isFeatured,
         isArchived,
+        quantity: quantity || 1,
         categoryId,
         colorId,
         sizeId,

@@ -64,7 +64,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
   }
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = order.orderItems.map((orderItem) => ({
-    quantity: 1,
+    quantity: orderItem.quantity,
     price_data: {
       currency: 'USD',
       product_data: {

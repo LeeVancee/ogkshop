@@ -27,7 +27,7 @@ const Summary = () => {
   }, [searchParams, removeAll]);
 
   const totalPrice = items.reduce((total, item) => {
-    return total + Number(item.price);
+    return total + Number(item.price) * item.quantity;
   }, 0);
 
   const onCheckout = async () => {
@@ -39,6 +39,7 @@ const Summary = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
       {
         productIds: items.map((item) => item.id),
+        quantities: items.map((item) => item.quantity), // Replace with the actual quantities
       },
       {
         headers: {
@@ -59,7 +60,7 @@ const Summary = () => {
           <Currency value={totalPrice} />
         </div>
       </div>
-      <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6 ">
+      <Button onClick={onCheckout} disabled={items.length === 0} className="w-full mt-6">
         Checkout
       </Button>
     </div>
