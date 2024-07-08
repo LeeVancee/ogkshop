@@ -34,6 +34,7 @@ const Gallery = ({ images = [] }: GalleryProps) => {
                   height={592}
                   src={image.url}
                   alt="Image"
+                  priority
                   className="object-cover object-center"
                 />
               </Zoom>
