@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: 'explore the world of digital goods',
 };
 
+const recursive = localFont({
+  src: '../fonts/Recursive-Medium.ttf',
+});
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -16,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider>
-        <body>{children}</body>
+        <body className={recursive.className}>{children}</body>
       </SessionProvider>
     </html>
   );
