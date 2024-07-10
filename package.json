@@ -35,15 +35,15 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.396.0",
-    "next": "15.0.0-canary.59",
+    "next": "14.2.4",
     "next-auth": "5.0.0-beta.18",
     "next-cloudinary": "^6.6.2",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
     "prisma": "^5.15.1",
     "query-string": "^9.0.0",
-    "react": "19.0.0-rc-df783f9ea1-20240708",
-    "react-dom": "19.0.0-rc-df783f9ea1-20240708",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-hook-form": "^7.52.0",
     "react-hot-toast": "^2.4.1",
     "react-is": "19.0.0-rc-df783f9ea1-20240708",
@@ -69,10 +69,5 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  },
-  "pnpm": {
-    "overrides": {
-      "react-is": "^19.0.0-rc-df783f9ea1-20240708"
-    }
   }
 }
