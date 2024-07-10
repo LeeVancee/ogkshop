@@ -1,5 +1,5 @@
 'use client';
-import { LogOut } from 'lucide-react';
+import { LogOut, Store } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -13,12 +13,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
+import Link from 'next/link';
 
 export function DropDown() {
   const { data: session } = useSession();
-  const logout = () => {
-    signOut({ callbackUrl: '/login' });
-  };
+
   if (session) {
     return (
       <DropdownMenu>
@@ -37,7 +36,11 @@ export function DropDown() {
               <p className="text-xs leading-none text-muted-foreground">{session.user?.email}</p>
             </div>
           </DropdownMenuLabel>
-
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Store className="mr-2 h-4 w-4" />
+            <Link href="/"> back to store</Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
             <LogOut className="mr-2 h-4 w-4" />

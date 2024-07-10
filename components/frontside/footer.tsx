@@ -2,7 +2,7 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t">
       <div className="mx-auto py-7  sm:px-6 lg:px-8">
-        <p className="text-center text-xs text-black">&copy; 2024 OGKSHOP, Inc. All rights reserved.</p>
+        <p className="text-center text-xs text-black">&copy; 2024 OGKSHOP</p>
       </div>
     </footer>
   );
