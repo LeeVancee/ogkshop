@@ -12,6 +12,9 @@
   "dependencies": {
     "@auth/core": "^0.34.1",
     "@auth/prisma-adapter": "^2.4.1",
+    "@fontsource-variable/inter": "^5.0.19",
+    "@fontsource-variable/noto-sans-sc": "^5.0.6",
+    "@fontsource/poppins": "^5.0.14",
     "@headlessui/react": "^2.1.1",
     "@hookform/resolvers": "^3.6.0",
     "@prisma/client": "^5.15.1",

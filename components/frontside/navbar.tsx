@@ -27,7 +27,7 @@ const Navbar = async () => {
             </div>
           </div>
 
-          <div className=" lg:hidden flex items-center justify-center h-full">
+          <div className=" lg:hidden flex items-center justify-center h-full ml-3">
             <MobileSidebar categories={categories} />
           </div>
         </nav>

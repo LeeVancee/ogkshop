@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/noto-sans-sc';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 
@@ -7,10 +8,6 @@ export const metadata: Metadata = {
   title: 'OGKSHOP',
   description: 'explore the world of digital goods',
 };
-
-const font = localFont({
-  src: '../fonts/Poppins-Medium.ttf',
-});
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider>
-        <body className={font.className}>{children}</body>
+        <body>{children}</body>
       </SessionProvider>
     </html>
   );
