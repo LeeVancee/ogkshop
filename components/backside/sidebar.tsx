@@ -1,9 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DashboardNav } from '@/components/backside/dashboard-nav';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '@/hooks/useSidebar';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { NavItem } from '@/types';
 import { ChevronLeft } from 'lucide-react';
 type SidebarProps = {
@@ -13,7 +13,6 @@ type SidebarProps = {
 export default function Sidebar({ className }: SidebarProps) {
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
-  const pathname = usePathname();
   const params = useParams();
 
   const routes: NavItem[] = [
