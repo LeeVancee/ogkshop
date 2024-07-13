@@ -1,14 +1,31 @@
 'use client';
 import { OrderColumn } from '@/types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import OrderCard from './OrderCard';
+import useCart from '@/hooks/use-cart';
+import { useSearchParams } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface OrderListProps {
   orders: OrderColumn[];
 }
+
 export default function OrderList({ orders }: OrderListProps) {
+  const removeAll = useCart((state) => state.removeAll);
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('success')) {
+      toast.success('Payment completed.');
+      removeAll();
+    }
+
+    if (searchParams.get('canceled')) {
+      toast.error('Something went wrong.');
+    }
+  }, [searchParams, removeAll]);
+
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 p-6">
       {orders.length > 0 ? (
         orders.map((order) => (
           <OrderCard

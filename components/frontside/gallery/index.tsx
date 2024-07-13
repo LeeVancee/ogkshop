@@ -27,7 +27,7 @@ const Gallery = ({ images = [] }: GalleryProps) => {
       <TabPanels className="aspect-square w-full">
         {images.map((image) => (
           <TabPanel key={image.id}>
-            <div className="aspect-square relative h-full w-full sm:rounded-lg ">
+            <div className="aspect-square relative sm:rounded-lg ">
               <Zoom>
                 <NextImage
                   width={592}

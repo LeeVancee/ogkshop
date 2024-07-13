@@ -22,9 +22,8 @@ const Navbar = async () => {
 
           <div className="ml-auto flex items-center gap-x-4">
             <DropDown />
-            <div className="hidden lg:block">
-              <NavbarActions />
-            </div>
+
+            <NavbarActions />
           </div>
 
           <div className=" lg:hidden flex items-center justify-center h-full ml-3">

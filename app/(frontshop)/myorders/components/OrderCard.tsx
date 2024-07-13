@@ -133,8 +133,8 @@ export default function OrderCard({
           </div>
 
           <div className="flex justify-center items-center">
-            <div className="ml-auto">
-              <Image src={image} alt="product image" width={200} height={200} />
+            <div className="ml-auto w-[200px] h-[200px] p-4">
+              <Image src={image} alt="product image" width={200} height={200} className="w-full h-full object-cover" />
             </div>
           </div>
         </div>

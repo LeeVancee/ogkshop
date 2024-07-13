@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
 import useCart from '@/hooks/use-cart';
 import { Input } from '../ui/input';
+import QuantitySelector from './cart/quantity-selector';
 
 interface InfoProps {
   data: Product;
@@ -39,12 +40,13 @@ const Info = ({ data }: InfoProps) => {
         </div>
         <div className="flex items-center gap-x-4">
           <h3 className="font-semibold text-black">Quantity:</h3>
-          <Input
+          {/*  <Input
             type="number"
             className="w-20"
             value={quantity}
             onChange={(e) => setQuantity(parseInt(e.target.value))}
-          />
+          /> */}
+          <QuantitySelector initialQuantity={quantity} onChange={setQuantity} />
         </div>
       </div>
       <div className="mt-10 flex items-center gap-x-3">

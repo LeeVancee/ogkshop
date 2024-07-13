@@ -6,10 +6,8 @@ import { useEffect, useState } from 'react';
 
 import useCart from '@/hooks/use-cart';
 
-import { Button } from '../ui/button';
-import { DropDown } from './DropDown';
-import { ThemeToggle } from './theme-toggle';
-import Link from 'next/link';
+import OpenCart from './cart/cart';
+import { CartModal } from './cart/cart-modal';
 const NavbarActions = () => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -26,20 +24,10 @@ const NavbarActions = () => {
 
   return (
     <>
-      {/*  {!user ? (
-        <SignInButton mode="modal">
-          <Button variant="ghost" className="flex items-center rounded-full  px-4 py-2">
-            Sign in
-          </Button>
-        </SignInButton>
-      ) : (
-        <UserButton />
-      )} */}
-
-      <Button onClick={() => router.push('/cart')} className="flex items-center rounded-full bg-black px-4 py-2">
-        <ShoppingBag size={20} color="white" />
-        <span className="ml-2 text-sm font-medium text-white">{cart.items.length}</span>
-      </Button>
+      {/* <button onClick={() => router.push('/cart')}>
+        <OpenCart quantity={cart.items.length} />
+      </button> */}
+      <CartModal />
     </>
   );
 };
