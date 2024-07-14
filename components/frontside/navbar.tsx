@@ -5,12 +5,13 @@ import NavbarActions from './navbar-actions';
 import getCategories from '@/actions/get-categories';
 import { DropDown } from './DropDown';
 import { MobileSidebar } from './mobile-sidebar';
+import { ModeToggle } from '../modeToggle';
 
 const Navbar = async () => {
   const categories = await getCategories();
 
   return (
-    <div className="border-b">
+    <header className="sticky inset-0 z-50  border-b bg-background/90 backdrop-blur-md">
       <Container>
         <nav className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center">
           <Link href="/" className="ml-4 flex lg:ml-0 gap-x-2">
@@ -24,6 +25,7 @@ const Navbar = async () => {
             <DropDown />
 
             <NavbarActions />
+            <ModeToggle />
           </div>
 
           <div className=" lg:hidden flex items-center justify-center h-full ml-3">
@@ -31,7 +33,7 @@ const Navbar = async () => {
           </div>
         </nav>
       </Container>
-    </div>
+    </header>
   );
 };
 

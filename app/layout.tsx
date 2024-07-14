@@ -3,6 +3,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/noto-sans-sc';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from '@/providers/theme-provider';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP',
@@ -16,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider>
-        <body>{children}</body>
+        <body>
+          <ThemeProvider attribute="class" defaultTheme="system">
+            {children}
+          </ThemeProvider>
+        </body>
       </SessionProvider>
     </html>
   );

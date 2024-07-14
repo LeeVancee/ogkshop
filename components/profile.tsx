@@ -66,10 +66,10 @@ export default function Profile() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-8">
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-800">Personal Information</h2>
+            <h2 className="text-2xl font-semibold">Personal Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <Label htmlFor="name" className="block text-sm font-medium ">
                   Name
                 </Label>
                 <Input
@@ -77,17 +77,17 @@ export default function Profile() {
                   placeholder="Enter your name"
                   defaultValue={user.name}
                   {...register('name')}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm "
                 />
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-800">Change Password</h2>
+            <h2 className="text-2xl font-semibold">Change Password</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="current-password" className="block text-sm font-medium text-gray-700">
+                <Label htmlFor="current-password" className="block text-sm font-medium">
                   Current Password
                 </Label>
                 <Input
@@ -95,14 +95,14 @@ export default function Profile() {
                   placeholder="Enter your current password"
                   type="password"
                   {...register('currentPassword')}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="new-password" className="block text-sm font-medium text-gray-700">
+                <Label htmlFor="new-password" className="block text-sm font-medium">
                   New Password
                 </Label>
                 <Input
@@ -110,11 +110,11 @@ export default function Profile() {
                   placeholder="Enter your new password"
                   type="password"
                   {...register('newPassword')}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm "
                 />
               </div>
               <div>
-                <Label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+                <Label htmlFor="confirm-password" className="block text-sm font-medium">
                   Confirm Password
                 </Label>
                 <Input
