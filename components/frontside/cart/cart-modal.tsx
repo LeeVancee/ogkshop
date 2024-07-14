@@ -27,7 +27,7 @@ export function CartModal() {
             ))}
           </ul>
           <div className=" border-neutral-300 dark:border-neutral-700">
-            <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
+            <div className="py-4 text-sm text-neutral-500 dark:text-white">
               <Summary />
             </div>
           </div>
