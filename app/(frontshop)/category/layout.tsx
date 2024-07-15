@@ -5,9 +5,10 @@ import Filter from './[categoryId]/components/filter';
 import getColors from '@/actions/get-colors';
 import getSizes from '@/actions/get-sizes';
 
+const storeId = process.env.NEXT_PUBLIC_STORE_ID!;
 export default async function CategoryLayout({ children }: { children: React.ReactNode }) {
-  const sizes = await getSizes();
-  const colors = await getColors();
+  const sizes = await getSizes(storeId);
+  const colors = await getColors(storeId);
   return (
     <Container>
       <div className="p-6 sm:px-6 lg:px-8 pb-24">

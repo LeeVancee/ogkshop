@@ -7,8 +7,10 @@ import { DropDown } from './DropDown';
 import { MobileSidebar } from './mobile-sidebar';
 import { ModeToggle } from '../modeToggle';
 
+const STORE_ID = 'fab17ed6-6ad8-4356-b872-b26250a8764e';
+
 const Navbar = async () => {
-  const categories = await getCategories();
+  const categories = await getCategories({ storeId: STORE_ID });
 
   return (
     <header className="sticky inset-0 z-50  border-b bg-background/90 backdrop-blur-md">

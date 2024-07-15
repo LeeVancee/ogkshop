@@ -1,15 +1,6 @@
-import Container from '@/components/ui/container';
-import Billboard from '@/components/frontside/billboard';
 import ProductCard from '@/components/frontside/product-card';
 import NoResults from '@/components/frontside/no-results';
-
 import getProducts from '@/actions/get-products';
-import getCategory from '@/actions/get-category';
-import getSizes from '@/actions/get-sizes';
-import getColors from '@/actions/get-colors';
-
-import Filter from './components/filter';
-import MobileFilters from './components/mobile-filters';
 
 interface CategoryPageProps {
   params: {
