@@ -1,6 +1,3 @@
-'use client';
-
-
 import {Modal} from './modal';
 import {Button} from '@/components/ui/button';
 
