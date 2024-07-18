@@ -1,34 +1,33 @@
-import { redirect } from 'next/navigation';
+import {redirect} from 'next/navigation';
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import {auth} from '@/auth';
 
-export default async function SetupLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  const adminId = session?.user.id;
+export default async function SetupLayout({children}: { children: React.ReactNode }) {
+    const session = await auth();
+    const adminId = session?.user.id;
+  
 
-  //  const userId = '78c5a8de-dfea-4bbc-bb7d-981ea0f12a91';
+    // 检查用户是否已登录，以及是否是 admin 用户
+    const user = await prismadb.user.findUnique({
+        where: {
+            id: adminId,
+            roles: 'ADMIN',
+        },
+    });
 
-  // 检查用户是否已登录，以及是否是 admin 用户
-  const user = await prismadb.user.findUnique({
-    where: {
-      id: adminId,
-      roles: 'ADMIN',
-    },
-  });
+    if (!user) {
+        redirect('/');
+    }
 
-  if (!user) {
-    redirect('/');
-  }
+    const store = await prismadb.store.findFirst({
+        where: {
+            adminId: adminId,
+        },
+    });
 
-  const store = await prismadb.store.findFirst({
-    where: {
-      adminId: adminId,
-    },
-  });
+    if (store) {
+        redirect(`/dashboard/${store.id}`);
+    }
 
-  if (store) {
-    redirect(`/dashboard/${store.id}`);
-  }
-
-  return <>{children}</>;
+    return <>{children}</>;
 }
