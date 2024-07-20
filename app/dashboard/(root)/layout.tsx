@@ -1,11 +1,12 @@
 import {redirect} from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import {auth} from '@/auth';
+import React from "react";
 
 export default async function SetupLayout({children}: { children: React.ReactNode }) {
     const session = await auth();
     const adminId = session?.user.id;
-  
+
 
     // 检查用户是否已登录，以及是否是 admin 用户
     const user = await prismadb.user.findUnique({

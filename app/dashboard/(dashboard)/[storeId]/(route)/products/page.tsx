@@ -13,8 +13,8 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
     },
     include: {
       category: true,
-      size: true,
-      color: true,
+      sizes: true,
+      colors: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -28,8 +28,8 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
     isArchived: item.isArchived,
     price: formatter.format(Number(item.price)),
     category: item.category.name,
-    size: item.size.name,
-    color: item.color.value,
+    size: item.sizes.map((size) => size.name).join(', '),
+    color: item.colors.map((color) => color.name).join(', '),
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
 

@@ -28,7 +28,7 @@ const Navbar = async () => {
             <DropDown />
             <NavbarActions />
             <ModeToggle />
-            <div className="lg:hidden items-center">
+            <div className=" flex lg:hidden items-center">
               <MobileSidebar categories={categories} />
             </div>
           </div>

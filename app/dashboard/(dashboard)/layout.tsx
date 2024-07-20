@@ -2,6 +2,7 @@ import {redirect} from 'next/navigation';
 import prismadb from '@/lib/prismadb';
 import Header from '@/components/backside/header';
 import Sidebar from '@/components/backside/sidebar';
+import React from "react";
 
 export default async function DashboardLayout({
                                                   children,

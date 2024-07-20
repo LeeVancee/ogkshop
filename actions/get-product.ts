@@ -12,7 +12,7 @@ export default getProduct;
  */
 
 import prismadb from '@/lib/prismadb';
-import { Billboard, Product } from '@/types';
+import { Billboard, Product, Size, Color } from '@/types';
 
 export default async function getProduct(productId: string): Promise<Product | null> {
   try {
@@ -27,8 +27,8 @@ export default async function getProduct(productId: string): Promise<Product | n
             billboard: true,
           },
         },
-        size: true,
-        color: true,
+        sizes: true,
+        colors: true,
       },
     });
 
@@ -42,8 +42,8 @@ export default async function getProduct(productId: string): Promise<Product | n
       name: product.name,
       price: Number(product.price), // Assuming Prisma returns Decimal, convert to number
       images: product.images,
-      size: product.size,
-      color: product.color,
+      sizes: product.sizes as Size[], // Assuming Size type matches
+      colors: product.colors as Color[], // Assuming Color type matches
       isFeatured: product.isFeatured,
       category: {
         id: product.category.id,

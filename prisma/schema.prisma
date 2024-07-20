@@ -76,19 +76,17 @@ model Product {
   isFeatured Boolean     @default(false)
   isArchived Boolean     @default(false)
   quantity   Int         @default(1)
-  sizeId     String
-  size       Size        @relation(fields: [sizeId], references: [id])
-  colorId    String
-  color      Color       @relation(fields: [colorId], references: [id])
+  sizes      Size[]      @relation("ProductToSize")
+  colors     Color[]     @relation("ProductToColor")
   images     Image[]
   orderItems OrderItem[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 
+  colorId String?
+
   @@index([storeId])
   @@index([categoryId])
-  @@index([sizeId])
-  @@index([colorId])
 }
 
 model Order {
@@ -114,34 +112,43 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+  sizeId    String?
+  size      Size?   @relation(fields: [sizeId], references: [id])
+  colorId   String?
+  color     Color?  @relation(fields: [colorId], references: [id])
   quantity  Int
 
   @@index([orderId])
   @@index([productId])
+  @@index([sizeId])
+  @@index([colorId])
 }
 
 model Size {
-  id        String    @id @default(uuid())
-  storeId   String
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
-  name      String
-  value     String
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String      @id @default(uuid())
+  storeId    String
+  store      Store       @relation("StoreToSize", fields: [storeId], references: [id])
+  name       String
+  value      String
+  products   Product[]   @relation("ProductToSize")
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   @@index([storeId])
 }
 
 model Color {
-  id        String    @id @default(uuid())
-  storeId   String
-  store     Store     @relation("StoreToColor", fields: [storeId], references: [id])
-  name      String
-  value     String
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String      @id @default(uuid())
+  storeId    String
+  store      Store       @relation("StoreToColor", fields: [storeId], references: [id])
+  name       String
+  value      String
+  products   Product[]   @relation("ProductToColor")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  productId  String?
+  orderItems OrderItem[]
 
   @@index([storeId])
 }

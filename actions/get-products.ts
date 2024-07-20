@@ -39,7 +39,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
 
 export default getProducts; */
 import prismadb from '@/lib/prismadb';
-import { Billboard, Product } from '@/types';
+import { Billboard, Product, Size, Color } from '@/types';
 
 interface Query {
   storeId?: string;
@@ -55,8 +55,20 @@ const getProducts = async (query: Query): Promise<Product[]> => {
       where: {
         storeId: query.storeId,
         categoryId: query.categoryId,
-        colorId: query.colorId,
-        sizeId: query.sizeId,
+        colors: query.colorId
+          ? {
+              some: {
+                id: query.colorId,
+              },
+            }
+          : undefined,
+        sizes: query.sizeId
+          ? {
+              some: {
+                id: query.sizeId,
+              },
+            }
+          : undefined,
         isFeatured: query.isFeatured ? true : undefined,
         isArchived: false,
       },
@@ -64,11 +76,11 @@ const getProducts = async (query: Query): Promise<Product[]> => {
         images: true,
         category: {
           include: {
-            billboard: true, // 包含billboard数据
+            billboard: true,
           },
         },
-        color: true,
-        size: true,
+        colors: true,
+        sizes: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -79,10 +91,10 @@ const getProducts = async (query: Query): Promise<Product[]> => {
     const formattedProducts: Product[] = products.map((product) => ({
       id: product.id,
       name: product.name,
-      price: product.price, // 假设Prisma返回的是Decimal，需要转换为number
+      price: parseFloat(product.price.toString()), // 假设Prisma返回的是Decimal，需要转换为number
       isFeatured: product.isFeatured,
-      size: product.size,
-      color: product.color,
+      sizes: product.sizes as Size[], // 假设Size类型匹配
+      colors: product.colors as Color[], // 假设Color类型匹配
       images: product.images,
       category: {
         id: product.category.id,

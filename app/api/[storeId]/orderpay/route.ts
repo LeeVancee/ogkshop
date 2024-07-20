@@ -38,6 +38,8 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         orderItems: {
           include: {
             product: true,
+            size: true,
+            color: true,
           },
         },
       },
@@ -54,6 +56,8 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         orderItems: {
           include: {
             product: true,
+            size: true,
+            color: true,
           },
         },
       },
@@ -68,7 +72,9 @@ export async function POST(req: Request, { params }: { params: { storeId: string
     price_data: {
       currency: 'USD',
       product_data: {
-        name: orderItem.product.name,
+        name: `${orderItem.product.name}${orderItem.size ? ` - ${orderItem.size.name}` : ''}${
+          orderItem.color ? ` - ${orderItem.color.name}` : ''
+        }`,
       },
       unit_amount: orderItem.product.price * 100,
     },

@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
@@ -10,7 +9,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
     const body = await req.json();
 
-    const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived, quantity } = body;
+    const { name, price, categoryId, colorIds, sizeIds, images, isFeatured, isArchived, quantity } = body;
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -32,12 +31,12 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       return new NextResponse('Category id is required', { status: 400 });
     }
 
-    if (!colorId) {
-      return new NextResponse('Color id is required', { status: 400 });
+    if (!colorIds || colorIds.length === 0) {
+      return new NextResponse('At least one color id is required', { status: 400 });
     }
 
-    if (!sizeId) {
-      return new NextResponse('Size id is required', { status: 400 });
+    if (!sizeIds || sizeIds.length === 0) {
+      return new NextResponse('At least one size id is required', { status: 400 });
     }
 
     if (!quantity) {
@@ -67,14 +66,24 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         isArchived,
         quantity: quantity || 1,
         categoryId,
-        colorId,
-        sizeId,
         storeId: params.storeId,
         images: {
           createMany: {
             data: [...images.map((image: { url: string }) => image)],
           },
         },
+        sizes: {
+          connect: sizeIds.map((id: string) => ({ id })),
+        },
+        colors: {
+          connect: colorIds.map((id: string) => ({ id })),
+        },
+      },
+      include: {
+        images: true,
+        category: true,
+        sizes: true,
+        colors: true,
       },
     });
 
@@ -101,16 +110,28 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
       where: {
         storeId: params.storeId,
         categoryId,
-        colorId,
-        sizeId,
+        colors: colorId
+          ? {
+              some: {
+                id: colorId,
+              },
+            }
+          : undefined,
+        sizes: sizeId
+          ? {
+              some: {
+                id: sizeId,
+              },
+            }
+          : undefined,
         isFeatured: isFeatured ? true : undefined,
         isArchived: false,
       },
       include: {
         images: true,
         category: true,
-        color: true,
-        size: true,
+        colors: true,
+        sizes: true,
       },
       orderBy: {
         createdAt: 'desc',

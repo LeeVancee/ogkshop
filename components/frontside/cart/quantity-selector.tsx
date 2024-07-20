@@ -30,7 +30,7 @@ const QuantitySelector = ({ initialQuantity = 1, min = 1, max = 99, onChange }: 
       <button onClick={handleDecrease} disabled={quantity <= min} className="px-2 py-1 ">
         -
       </button>
-      <input type="text" value={quantity} readOnly className="w-12 text-center " />
+      <input type="text" value={quantity} readOnly className="w-12 text-center bg-white dark:bg-gray-900 " />
       <button onClick={handleIncrease} disabled={quantity >= max} className="px-2 py-1 ">
         +
       </button>

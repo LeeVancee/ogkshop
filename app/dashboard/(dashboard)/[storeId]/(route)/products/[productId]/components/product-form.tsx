@@ -19,14 +19,14 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ImageUpload from '@/components/backside/image-upload';
 import { Checkbox } from '@/components/ui/checkbox';
-
+import { MultiSelect } from '@/components/multiple-select';
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
-  colorId: z.string().min(1),
-  sizeId: z.string().min(1),
+  sizeIds: z.array(z.string()).min(1, 'At least one size must be selected'),
+  colorIds: z.array(z.string()).min(1, 'At least one color must be selected'),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
   quantity: z.coerce.number().min(1),
@@ -38,6 +38,8 @@ interface ProductFormProps {
   initialData:
     | (Product & {
         images: Image[];
+        sizes: Size[];
+        colors: Color[];
       })
     | null;
   categories: Category[];
@@ -62,14 +64,16 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
         ...initialData,
         price: parseFloat(String(initialData?.price)),
         quantity: parseInt(String(initialData?.quantity)),
+        sizeIds: initialData.sizes.map((size) => size.id),
+        colorIds: initialData.colors.map((color) => color.id),
       }
     : {
         name: '',
         images: [],
         price: 0,
         categoryId: '',
-        colorId: '',
-        sizeId: '',
+        sizeIds: [],
+        colorIds: [],
         isFeatured: false,
         isArchived: false,
         quantity: 1,
@@ -203,58 +207,32 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
             />
             <FormField
               control={form.control}
-              name="sizeId"
+              name="sizeIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Size</FormLabel>
-                  <Select
-                    disabled={loading}
+                  <FormLabel>Sizes</FormLabel>
+                  <MultiSelect
+                    options={sizes.map((size) => ({ label: size.name, value: size.id }))}
                     onValueChange={field.onChange}
-                    value={field.value}
                     defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {sizes.map((size) => (
-                        <SelectItem key={size.id} value={size.id}>
-                          {size.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder="Select sizes"
+                  />
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="colorId"
+              name="colorIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <Select
-                    disabled={loading}
+                  <FormLabel>Colors</FormLabel>
+                  <MultiSelect
+                    options={colors.map((color) => ({ label: color.name, value: color.id }))}
                     onValueChange={field.onChange}
-                    value={field.value}
                     defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} placeholder="Select a color" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {colors.map((color) => (
-                        <SelectItem key={color.id} value={color.id}>
-                          {color.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder="Select colors"
+                  />
                   <FormMessage />
                 </FormItem>
               )}

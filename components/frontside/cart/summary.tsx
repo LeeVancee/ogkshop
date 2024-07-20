@@ -24,7 +24,9 @@ const Summary = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
       {
         productIds: items.map((item) => item.id),
-        quantities: items.map((item) => item.quantity), // Replace with the actual quantities
+        quantities: items.map((item) => item.quantity),
+        sizeIds: items.map((item) => item.selectedSize?.id),
+        colorIds: items.map((item) => item.selectedColor?.id),
       },
       {
         headers: {
