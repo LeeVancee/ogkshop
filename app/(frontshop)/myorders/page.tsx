@@ -34,7 +34,6 @@ export default async function OrdersPage() {
       createdAt: 'desc',
     },
   });
-  console.log(orders);
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
