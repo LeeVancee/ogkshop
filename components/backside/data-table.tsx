@@ -1,5 +1,5 @@
 'use client';
-
+'use no memo'; // react compilier is not support current react table
 import { useState } from 'react';
 import {
   ColumnDef,
