@@ -16,7 +16,7 @@ export function CartModal() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="Open cart">
           <OpenCart quantity={cart.items.length} />
         </Button>
       </SheetTrigger>
