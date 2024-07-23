@@ -15,8 +15,8 @@ export default async function CategoryLayout({ children }: { children: React.Rea
         <div className="lg:grid lg:grid-cols-5 lg:gap-x-8">
           <MobileFilters sizes={sizes} colors={colors} />
           <div className="hidden lg:block">
-            <Filter valueKey="sizeId" name="Sizes" data={sizes} />
-            <Filter valueKey="colorId" name="Colors" data={colors} />
+            <Filter valueKey="sizeName" name="Sizes" data={sizes} />
+            <Filter valueKey="colorName" name="Colors" data={colors} />
           </div>
           {children}
         </div>

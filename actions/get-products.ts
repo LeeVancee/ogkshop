@@ -44,8 +44,8 @@ import { Billboard, Product, Size, Color } from '@/types';
 interface Query {
   storeId?: string;
   categoryId?: string;
-  colorId?: string;
-  sizeId?: string;
+  colorName?: string;
+  sizeName?: string;
   isFeatured?: boolean | undefined;
   categoryName?: string;
 }
@@ -66,17 +66,17 @@ const getProducts = async (query: Query): Promise<Product[]> => {
       where: {
         storeId: query.storeId,
         categoryId: category.id,
-        colors: query.colorId
+        colors: query.colorName
           ? {
               some: {
-                id: query.colorId,
+                name: query.colorName,
               },
             }
           : undefined,
-        sizes: query.sizeId
+        sizes: query.sizeName
           ? {
               some: {
-                id: query.sizeId,
+                name: query.sizeName,
               },
             }
           : undefined,

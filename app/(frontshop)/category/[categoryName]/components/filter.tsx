@@ -19,15 +19,15 @@ const Filter = ({ data, name, valueKey }: FilterProps) => {
 
   const selectedValue = searchParams.get(valueKey);
 
-  const onClick = (id: string) => {
+  const onClick = (name: string) => {
     const current = qs.parse(searchParams.toString());
 
     const query = {
       ...current,
-      [valueKey]: id,
+      [valueKey]: name,
     };
 
-    if (current[valueKey] === id) {
+    if (current[valueKey] === name) {
       query[valueKey] = null;
     }
 
@@ -48,11 +48,11 @@ const Filter = ({ data, name, valueKey }: FilterProps) => {
       <hr className="my-4" />
       <div className="flex flex-wrap gap-2">
         {data.map((filter) => (
-          <div key={filter.id} className="flex items-center">
+          <div key={filter.name} className="flex items-center">
             <Button
               variant="outline"
-              className={cn('rounded-md text-sm  p-2  ', selectedValue === filter.id && ' border-2')}
-              onClick={() => onClick(filter.id)}
+              className={cn('rounded-md text-sm  p-2  ', selectedValue === filter.name && ' border-2')}
+              onClick={() => onClick(filter.name)}
             >
               {filter.name}
             </Button>
