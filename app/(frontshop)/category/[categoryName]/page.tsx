@@ -5,7 +5,7 @@ import Grid from '@/components/grid';
 
 interface CategoryPageProps {
   params: {
-    categoryId: string;
+    categoryName: string;
   };
   searchParams: {
     colorId: string;
@@ -14,8 +14,10 @@ interface CategoryPageProps {
 }
 
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
+  console.log(params);
+
   const products = await getProducts({
-    categoryId: params.categoryId,
+    categoryName: params.categoryName,
     colorId: searchParams.colorId,
     sizeId: searchParams.sizeId,
   });

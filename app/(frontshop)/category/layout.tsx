@@ -1,7 +1,7 @@
 import Container from '@/components/ui/container';
 import React from 'react';
-import MobileFilters from './[categoryId]/components/mobile-filters';
-import Filter from './[categoryId]/components/filter';
+import MobileFilters from './[categoryName]/components/mobile-filters';
+import Filter from './[categoryName]/components/filter';
 import getColors from '@/actions/get-colors';
 import getSizes from '@/actions/get-sizes';
 

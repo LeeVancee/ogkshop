@@ -47,14 +47,25 @@ interface Query {
   colorId?: string;
   sizeId?: string;
   isFeatured?: boolean | undefined;
+  categoryName?: string;
 }
 
 const getProducts = async (query: Query): Promise<Product[]> => {
   try {
+    // 查找 categoryId
+    // 查找 categoryId
+    const category = await prismadb.category.findFirst({
+      where: { name: query.categoryName },
+      select: { id: true },
+    });
+
+    if (!category) {
+      return [];
+    }
     const products = await prismadb.product.findMany({
       where: {
         storeId: query.storeId,
-        categoryId: query.categoryId,
+        categoryId: category.id,
         colors: query.colorId
           ? {
               some: {
