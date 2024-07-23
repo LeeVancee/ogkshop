@@ -17,7 +17,7 @@ export function MobileSidebar({ categories }: any) {
     <>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <button className="focus:outline-none">
+          <button className="focus:outline-none" aria-label="Open categories">
             <MenuIcon />
           </button>
         </SheetTrigger>
