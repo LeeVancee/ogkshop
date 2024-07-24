@@ -1,6 +1,6 @@
 'use client';
-'use no memo'; // react compilier is not support current react table
-import { useState } from 'react';
+'use no memo'; // react compiler is not support current react table
+import {useState} from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -8,12 +8,12 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -21,7 +21,7 @@ interface DataTableProps<TData, TValue> {
   searchKey: string;
 }
 
-export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({columns, data, searchKey}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -31,8 +31,8 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnFilters,
-    },
+      columnFilters
+    }
   });
 
   return (
