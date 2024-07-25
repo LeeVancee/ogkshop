@@ -57,6 +57,7 @@ export function SearchModal({products}: SearchModalProps) {
         variant="outline"
         onClick={() => setOpen(true)}
         className="h-10 w-10 p-0"
+        aria-label="Search"
       >
         <Search className="h-4 w-4"/>
       </Button>

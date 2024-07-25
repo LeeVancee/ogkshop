@@ -20,7 +20,7 @@ interface categoryProps {
 
 export default function DesktopNav({data}: categoryProps) {
   return (
-    <NavigationMenu delayDuration={0} className="lg:flex">
+    <NavigationMenu delayDuration={0} className="lg:flex pl-2">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className=" text-muted-foreground">Categories</NavigationMenuTrigger>
