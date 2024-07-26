@@ -1,8 +1,6 @@
 'use client';
 
 import { CldUploadWidget } from 'next-cloudinary';
-import { useEffect, useState } from 'react';
-
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
@@ -15,19 +13,9 @@ interface ImageUploadProps {
 }
 
 const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const onUpload = (result: any) => {
     onChange(result.info.secure_url);
   };
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div>
