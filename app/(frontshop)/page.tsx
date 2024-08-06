@@ -4,11 +4,14 @@ import ProductList from '@/components/frontside/product-list';
 import Billboard from '@/components/frontside/billboard';
 import Container from '@/components/ui/container';
 import Skeleton from '@/components/ui/skeleton';
+import { getFeatured } from '@/actions/get-featured';
 
 const billboardId = process.env.NEXT_PUBLIC_BILLBOARD_ID;
 
 const HomePage = async () => {
-  const [products, billboard] = await Promise.all([getProducts({ isFeatured: true }), getBillboard(billboardId!)]);
+  const billboard = await getBillboard(billboardId!);
+  // const products = await getProducts({ isFeatured: true });
+  const featuredProducts = await getFeatured();
 
   return (
     <Container>
@@ -21,7 +24,7 @@ const HomePage = async () => {
           </div>
         )}
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <ProductList title="Featured Products" items={products} />
+          <ProductList title="Featured Products" items={featuredProducts} />
         </div>
       </div>
     </Container>

@@ -2,7 +2,7 @@ import { Icons } from './components/backside/icons';
 
 export interface Product {
   id: string;
-  category: Category;
+  category?: Category;
   name: string;
   price: number;
   isFeatured: boolean;
