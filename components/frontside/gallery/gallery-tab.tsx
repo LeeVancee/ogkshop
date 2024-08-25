@@ -14,7 +14,13 @@ const GalleryTab = ({ image }: GalleryTabProps) => {
       {({ selected }) => (
         <div>
           <span className="absolute h-full w-full aspect-square inset-0 overflow-hidden rounded-md">
-            <NextImage fill src={image.url} alt="" className="object-cover object-center" />
+            <NextImage
+              fill
+              src={image.url}
+              sizes="(max-width: 768px) 100vw, 768px"
+              alt=""
+              className="object-cover object-center"
+            />
           </span>
           <span
             className={cn(
