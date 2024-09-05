@@ -24,7 +24,7 @@ interface OrderCardProps {
   createdAt: string;
 }
 
-export default function Component({
+export default function OrderCard({
   id,
   phone,
   address,
