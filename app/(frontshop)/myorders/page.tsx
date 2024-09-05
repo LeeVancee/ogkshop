@@ -54,7 +54,7 @@ export default async function OrdersPage() {
 
   return (
     <Container className="min-h-screen">
-      <OrderList orders={formattedOrders} />
+      <OrderList initialOrders={formattedOrders} />
     </Container>
   );
 }

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import { Truck, Package, MapPin, Phone, DollarSign } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-
+import ky from 'ky';
 import { AlertModal } from '@/components/frontside/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,19 +23,15 @@ interface OrderCardProps {
   isPaid: boolean;
   createdAt: string;
 }
+interface OrderProps {
+  order: OrderCardProps;
+  onDeleteSuccess: (orderId: string) => void;
+}
 
-export default function OrderCard({
-  id,
-  phone,
-  address,
-  products,
-  isPaid,
-  image,
-  totalPrice,
-  createdAt,
-}: OrderCardProps) {
-  const router = useRouter();
+export default function OrderCard({ order, onDeleteSuccess }: OrderProps) {
   const session = useSession();
+  const router = useRouter();
+  const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
   const user = session.data?.user;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,12 +43,13 @@ export default function OrderCard({
     }
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/orderpay`,
-        { orderId: id },
-        { headers: { Authorization: `Bearer ${user.id}` } }
-      );
-      window.location.href = response.data.url;
+      const response: any = await ky
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/orderpay`, {
+          json: { orderId: id },
+          headers: { Authorization: `Bearer ${user.id}` },
+        })
+        .json();
+      router.push(response.url);
     } catch (error) {
       toast.error('Payment initiation failed. Please try again.');
     } finally {
@@ -63,11 +60,11 @@ export default function OrderCard({
   const onDelete = async () => {
     setLoading(true);
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/deleteorder`, {
-        data: { orderId: id },
+      await ky.delete(`${process.env.NEXT_PUBLIC_API_URL}/deleteorder`, {
+        json: { orderId: id },
       });
       toast.success('Order deleted.');
-      router.refresh();
+      onDeleteSuccess(id); // 调用传入的回调函数，更新父组件中的订单列表
     } catch (error) {
       toast.error('Failed to delete order. Please try again.');
     } finally {
@@ -75,7 +72,6 @@ export default function OrderCard({
       setOpen(false);
     }
   };
-  console.log(createdAt);
 
   return (
     <>
