@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { ProductColumn } from './columns';
+import ky from 'ky';
 
 interface CellActionProps {
   data: ProductColumn;
@@ -31,7 +32,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${data.id}`);
+      await ky.delete(`/api/${params.storeId}/products/${data.id}`);
       toast.success('Product deleted.');
       router.refresh();
     } catch (error) {

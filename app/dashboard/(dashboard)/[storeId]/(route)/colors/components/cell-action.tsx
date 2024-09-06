@@ -17,6 +17,7 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { ColorColumn } from './columns';
+import ky from 'ky';
 
 interface CellActionProps {
   data: ColorColumn;
@@ -31,7 +32,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/colors/${data.id}`);
+      await ky.delete(`/api/${params.storeId}/colors/${data.id}`);
       toast.success('Color deleted.');
       router.refresh();
     } catch (error) {

@@ -18,6 +18,7 @@ import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { ApiAlert } from '@/components/backside/api/api-alert';
 import { useOrigin } from '@/hooks/use-origin';
+import ky from 'ky';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -45,7 +46,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const onSubmit = async (data: SettingsFormValues) => {
     try {
       setLoading(true);
-      await axios.patch(`/api/stores/${params.storeId}`, data);
+      await ky.patch(`/api/stores/${params.storeId}`, { json: data });
       router.refresh();
       toast.success('Store updated.');
     } catch (error: any) {
@@ -58,7 +59,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores/${params.storeId}`);
+      await ky.delete(`/api/stores/${params.storeId}`);
       router.refresh();
       router.push('/dashboard');
       toast.success('Store deleted.');

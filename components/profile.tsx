@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import ky from 'ky';
 
 const ProfileSchema = z
   .object({
@@ -45,7 +46,7 @@ export default function Profile() {
   const onSubmit = async (data: ProfileFormValues) => {
     setLoading(true);
     try {
-      await axios.post(`/api/user/profile`, data);
+      await ky.post(`/api/user/profile`, { json: data });
       toast.success('Profile updated successfully, Please re-login...');
     } catch (error: any) {
       if (error.response && error.response.status === 400) {

@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useActiveTabStore } from '@/hooks/use-activeTab';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import ky from 'ky';
 
 export function AuthDialog() {
   const { activeTab, changeActiveTab } = useActiveTabStore();
@@ -66,7 +67,7 @@ export function AuthDialog() {
     const submitData = { ...data, role };
 
     try {
-      await axios.post(`/api/user/register`, submitData);
+      await ky.post(`/api/user/register`, { json: submitData });
       toast.success('Successfully created account! redirecting to login...');
       changeActiveTab('login');
     } catch (error: any) {

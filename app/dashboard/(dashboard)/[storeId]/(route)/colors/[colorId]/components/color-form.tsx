@@ -16,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
+import ky from 'ky';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -53,9 +54,9 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/colors/${params.colorId}`, data);
+        await ky.patch(`/api/${params.storeId}/colors/${params.colorId}`, { json: data });
       } else {
-        await axios.post(`/api/${params.storeId}/colors`, data);
+        await ky.post(`/api/${params.storeId}/colors`, { json: data });
       }
       router.refresh();
       router.push(`/dashboard/${params.storeId}/colors`);
@@ -70,7 +71,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`);
+      await ky.delete(`/api/${params.storeId}/colors/${params.colorId}`);
       router.refresh();
       router.push(`/dashboard/${params.storeId}/colors`);
       toast.success('Color deleted.');

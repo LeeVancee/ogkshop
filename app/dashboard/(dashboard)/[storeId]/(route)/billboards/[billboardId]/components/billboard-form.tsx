@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import ImageUpload from '@/components/backside/image-upload';
+import ky from 'ky';
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -53,14 +54,14 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+        await ky.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, { json: data });
       } else {
-        await axios.post(`/api/${params.storeId}/billboards`, data);
+        await ky.post(`/api/${params.storeId}/billboards`, { json: data });
       }
       router.refresh();
       router.push(`/dashboard/${params.storeId}/billboards`);
       toast.success(toastMessage);
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
@@ -70,7 +71,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
+      await ky.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
       router.refresh();
       router.push(`/dashboard/${params.storeId}/billboards`);
       toast.success('Billboard deleted.');

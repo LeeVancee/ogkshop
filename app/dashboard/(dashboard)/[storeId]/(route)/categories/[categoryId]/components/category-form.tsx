@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ky from 'ky';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -54,9 +55,9 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/categories/${params.categoryId}`, data);
+        await ky.patch(`/api/${params.storeId}/categories/${params.categoryId}`, { json: data });
       } else {
-        await axios.post(`/api/${params.storeId}/categories`, data);
+        await ky.post(`/api/${params.storeId}/categories`, { json: data });
       }
       router.refresh();
       router.push(`/dashboard/${params.storeId}/categories`);
@@ -71,7 +72,7 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/categories/${params.categoryId}`);
+      await ky.delete(`/api/${params.storeId}/categories/${params.categoryId}`);
       router.refresh();
       router.push(`/dashboard/${params.storeId}/categories`);
       toast.success('Category deleted.');

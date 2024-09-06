@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ImageUpload from '@/components/backside/image-upload';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MultiSelect } from '@/components/multiple-select';
+import ky from 'ky';
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
@@ -88,9 +89,9 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data);
+        await ky.patch(`/api/${params.storeId}/products/${params.productId}`, { json: data });
       } else {
-        await axios.post(`/api/${params.storeId}/products`, data);
+        await ky.post(`/api/${params.storeId}/products`, { json: data });
       }
       router.refresh();
       router.push(`/dashboard/${params.storeId}/products`);
@@ -105,7 +106,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      await ky.delete(`/api/${params.storeId}/products/${params.productId}`);
       router.refresh();
       router.push(`/dashboard/${params.storeId}/products`);
       toast.success('Product deleted.');
