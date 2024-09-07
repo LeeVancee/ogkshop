@@ -1,24 +1,31 @@
+import React from 'react';
 import ProductCard from './product-card';
-import { Product } from '@/types';
-import Grid from '../grid';
+import getProducts from '@/actions/get-products';
 
 interface ProductListProps {
-  title: string;
-  items: Product[];
+  categoryName: string;
+  colorName: string;
+  sizeName: string;
 }
 
-const ProductList = ({ title, items }: ProductListProps) => {
-  return (
-    <div className="space-y-4">
-      <h3 className="font-bold text-3xl">{title}</h3>
+export default async function ProductList({ categoryName, colorName, sizeName }: ProductListProps) {
+  const products = await getProducts({
+    categoryName: categoryName,
+    colorName: colorName,
+    sizeName: sizeName,
+  });
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {items.map((item) => (
+  if (products.length === 0) {
+    return <div className=" flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
+  }
+
+  return (
+    <div className="mt-6 lg:col-span-4 lg:mt-0">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {products.map((item) => (
           <ProductCard key={item.id} data={item} />
         ))}
       </div>
     </div>
   );
-};
-
-export default ProductList;
+}

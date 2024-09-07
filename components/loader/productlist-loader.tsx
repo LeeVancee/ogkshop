@@ -1,6 +1,7 @@
-import Grid from '@/components/grid';
+import React from 'react';
+import Grid from '../grid';
 
-export default function Loading() {
+export default function ProductListLoader() {
   return (
     <div className="mt-6 lg:col-span-4 lg:mt-0">
       <Grid className="grid-cols-2 md:grid-cols-4">

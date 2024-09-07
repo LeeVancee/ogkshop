@@ -84,6 +84,7 @@ export async function PATCH(req: Request, { params }: { params: { productId: str
     if (!name) {
       return new NextResponse('Name is required', { status: 400 });
     }
+    console.log(111);
 
     if (!images || !images.length) {
       return new NextResponse('Images are required', { status: 400 });

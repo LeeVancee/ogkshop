@@ -1,6 +1,6 @@
-import ProductCard from '@/components/frontside/product-card';
-import getProducts from '@/actions/get-products';
-import Grid from '@/components/grid';
+import ProductList from '@/components/frontside/product-list';
+import { Suspense } from 'react';
+import ProductListLoader from '@/components/loader/productlist-loader';
 
 interface CategoryPageProps {
   params: {
@@ -12,29 +12,15 @@ interface CategoryPageProps {
   };
 }
 
-const CategoryPage = async ({params, searchParams}: CategoryPageProps) => {
-  const products = await getProducts({
-    categoryName: params.categoryName,
-    colorName: searchParams.colorName,
-    sizeName: searchParams.sizeName
-  });
-
-  if (products.length === 0) {
-    return (
-      <div className=" flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">
-        No Products
-      </div>
-    );
-  }
-
+const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
   return (
-    <div className="mt-6 lg:col-span-4 lg:mt-0">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {products.map((item) => (
-          <ProductCard key={item.id} data={item}/>
-        ))}
-      </div>
-    </div>
+    <Suspense fallback={<ProductListLoader />}>
+      <ProductList
+        categoryName={params.categoryName}
+        colorName={searchParams.colorName}
+        sizeName={searchParams.sizeName}
+      />
+    </Suspense>
   );
 };
 

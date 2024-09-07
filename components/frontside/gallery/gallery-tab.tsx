@@ -18,8 +18,9 @@ const GalleryTab = ({ image }: GalleryTabProps) => {
               fill
               src={image.url}
               sizes="(max-width: 768px) 100vw, 768px"
-              alt=""
+              alt="gallery"
               className="object-cover object-center"
+              priority
             />
           </span>
           <span

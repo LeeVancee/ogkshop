@@ -90,6 +90,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
       setLoading(true);
       if (initialData) {
         await ky.patch(`/api/${params.storeId}/products/${params.productId}`, { json: data });
+        // await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data);
       } else {
         await ky.post(`/api/${params.storeId}/products`, { json: data });
       }
