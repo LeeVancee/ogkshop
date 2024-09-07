@@ -28,7 +28,7 @@ export function MobileSidebar({ categories }: any) {
               <div className="space-y-1">
                 {categories.map((category: Category) => (
                   <Link
-                    href={`/category/${category.id}`}
+                    href={`/category/${category.name}`}
                     key={category.id}
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
                     onClick={handleLinkClick}
