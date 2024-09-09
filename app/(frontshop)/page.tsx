@@ -8,7 +8,7 @@ import FeaturedList from '@/components/frontside/featured-list';
 const HomePage = async () => {
   return (
     <Container>
-      <div className="space-y-10 pb-10">
+      <div className="space-y-10 pb-10 pt-8">
         <Suspense fallback={<BillboardLoader />}>
           <Billboard />
         </Suspense>
