@@ -7,7 +7,6 @@ import React from 'react';
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ToastProvider />
       <PreviewModalProvider />
       <Navbar />
       <main className="flex-1 min-h-[calc(100vh-4rem-1px)]">{children}</main>

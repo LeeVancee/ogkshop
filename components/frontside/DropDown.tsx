@@ -20,7 +20,11 @@ export function DropDown() {
   const router = useRouter();
 
   if (status === 'unauthenticated') {
-    return <AuthDialog />;
+    return (
+      <Button variant="ghost" onClick={() => router.push('/auth')}>
+        login
+      </Button>
+    );
   }
 
   return (

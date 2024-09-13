@@ -5,6 +5,7 @@ import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@/providers/theme-provider';
 import React from 'react';
+import { ToastProvider } from '@/providers/toast-provider';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP',
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <SessionProvider>
         <body>
+          <ToastProvider />
           <ThemeProvider attribute="class" defaultTheme="system">
             {children}
           </ThemeProvider>
