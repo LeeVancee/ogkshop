@@ -33,8 +33,8 @@ const Billboard = async () => {
             src={billboard.imageUrl}
             alt={billboard.label}
             width={550}
-            height={550}
-            className="rounded-lg object-cover"
+            height={550} // 添加一个合适的高度值
+            className="rounded-lg object-cover w-full h-auto" // 修改 className
             priority
           />
         </div>
