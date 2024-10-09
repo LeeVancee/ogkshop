@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
-export async function POST(req: Request, { params }: { params: { storeId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ storeId: string }> }) {
   try {
     const session = await auth();
     const userId = session?.user.id;
-
+    const { storeId } = await params;
     const body = await req.json();
 
     const { label, imageUrl } = body;
@@ -24,13 +24,13 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       return new NextResponse('Image URL is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });
@@ -43,7 +43,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       data: {
         label,
         imageUrl,
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 
@@ -54,19 +54,16 @@ export async function POST(req: Request, { params }: { params: { storeId: string
   }
 }
 
-export async function GET(req: Request, res: any, { params }: { params: { storeId: string } }) {
-  /*   res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true'); */
+export async function GET(req: Request, res: any, { params }: { params: Promise<{ storeId: string }> }) {
   try {
-    if (!params.storeId) {
+    const { storeId } = await params;
+    if (!storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
 
     const billboards = await prismadb.billboard.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 

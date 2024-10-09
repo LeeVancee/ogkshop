@@ -3,15 +3,16 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
-export async function GET(req: Request, { params }: { params: { sizeId: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ sizeId: string }> }) {
   try {
-    if (!params.sizeId) {
+    const { sizeId } = await params;
+    if (!sizeId) {
       return new NextResponse('Size id is required', { status: 400 });
     }
 
     const size = await prismadb.size.findUnique({
       where: {
-        id: params.sizeId,
+        id: sizeId,
       },
     });
 
@@ -22,8 +23,9 @@ export async function GET(req: Request, { params }: { params: { sizeId: string }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { sizeId: string; storeId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ sizeId: string; storeId: string }> }) {
   try {
+    const { sizeId, storeId } = await params;
     const session = await auth();
     const userId = session?.user.id;
 
@@ -31,13 +33,13 @@ export async function DELETE(req: Request, { params }: { params: { sizeId: strin
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    if (!params.sizeId) {
+    if (!sizeId) {
       return new NextResponse('Size id is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });
@@ -48,7 +50,7 @@ export async function DELETE(req: Request, { params }: { params: { sizeId: strin
 
     const size = await prismadb.size.delete({
       where: {
-        id: params.sizeId,
+        id: sizeId,
       },
     });
 
@@ -59,8 +61,9 @@ export async function DELETE(req: Request, { params }: { params: { sizeId: strin
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { sizeId: string; storeId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ sizeId: string; storeId: string }> }) {
   try {
+    const { sizeId, storeId } = await params;
     const session = await auth();
     const userId = session?.user.id;
 
@@ -80,13 +83,13 @@ export async function PATCH(req: Request, { params }: { params: { sizeId: string
       return new NextResponse('Value is required', { status: 400 });
     }
 
-    if (!params.sizeId) {
+    if (!sizeId) {
       return new NextResponse('Size id is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });
@@ -97,7 +100,7 @@ export async function PATCH(req: Request, { params }: { params: { sizeId: string
 
     const size = await prismadb.size.update({
       where: {
-        id: params.sizeId,
+        id: sizeId,
       },
       data: {
         name,

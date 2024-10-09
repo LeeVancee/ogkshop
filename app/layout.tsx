@@ -6,6 +6,8 @@ import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@/providers/theme-provider';
 import React from 'react';
 import { ToastProvider } from '@/providers/toast-provider';
+import { QueryProvider } from '@/providers/query-provider';
+import { StoreModal } from '@/components/backside/modals/store-modal';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP',
@@ -21,8 +23,9 @@ export default function RootLayout({
       <SessionProvider>
         <body>
           <ToastProvider />
+          <StoreModal />
           <ThemeProvider attribute="class" defaultTheme="system">
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </ThemeProvider>
         </body>
       </SessionProvider>

@@ -1,19 +1,20 @@
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
 
-export async function DELETE(req: Request, { params }: { params: { orderId: string; storeId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ orderId: string; storeId: string }> }) {
   try {
-    if (!params.orderId) {
+    const { orderId, storeId } = await params;
+    if (!orderId) {
       return new NextResponse('Order id is required', { status: 400 });
     }
 
     const order = await prismadb.$transaction([
       prismadb.orderItem.deleteMany({
-        where: { orderId: params.orderId },
+        where: { orderId: orderId },
       }),
       prismadb.order.delete({
         where: {
-          id: params.orderId,
+          id: orderId,
         },
       }),
     ]);

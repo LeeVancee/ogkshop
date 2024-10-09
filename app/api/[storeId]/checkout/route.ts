@@ -121,9 +121,10 @@ export async function OPTIONS() {
   );
 } */
 
-export async function POST(req: Request, { params }: { params: { storeId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ storeId: string }> }) {
   try {
     const { productIds, quantities, sizeIds, colorIds } = await req.json();
+    const { storeId } = await params;
 
     if (
       !productIds ||
@@ -229,7 +230,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         // 设置用户ID
         userId: userId,
         // 设置商店ID
-        storeId: params.storeId,
+        storeId: storeId,
         // 设置支付状态为未支付
         isPaid: false,
         // 创建订单项

@@ -3,23 +3,22 @@ import { Suspense } from 'react';
 import ProductListLoader from '@/components/loader/productlist-loader';
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     categoryName: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     colorName: string;
     sizeName: string;
-  };
+  }>;
 }
 
 const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
+  const { categoryName } = await params;
+  const { colorName, sizeName } = await searchParams;
+
   return (
     <Suspense fallback={<ProductListLoader />}>
-      <ProductList
-        categoryName={params.categoryName}
-        colorName={searchParams.colorName}
-        sizeName={searchParams.sizeName}
-      />
+      <ProductList categoryName={categoryName} colorName={colorName} sizeName={sizeName} />
     </Suspense>
   );
 };

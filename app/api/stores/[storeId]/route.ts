@@ -3,10 +3,11 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
-export async function PATCH(req: Request, { params }: { params: { storeId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ storeId: string }> }) {
   try {
     const session = await auth();
     const userId = session?.user.id;
+    const { storeId } = await params;
     const body = await req.json();
 
     const { name } = body;
@@ -19,13 +20,13 @@ export async function PATCH(req: Request, { params }: { params: { storeId: strin
       return new NextResponse('Name is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
 
     const store = await prismadb.store.updateMany({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
       data: {
@@ -40,8 +41,9 @@ export async function PATCH(req: Request, { params }: { params: { storeId: strin
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { storeId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ storeId: string }> }) {
   try {
+    const { storeId } = await params;
     const session = await auth();
     const userId = session?.user.id;
 
@@ -49,13 +51,13 @@ export async function DELETE(req: Request, { params }: { params: { storeId: stri
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
 
     const store = await prismadb.store.deleteMany({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });

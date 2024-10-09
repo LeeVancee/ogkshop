@@ -14,8 +14,9 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function POST(req: Request, { params }: { params: { storeId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ storeId: string }> }) {
   const { orderId } = await req.json();
+  const { storeId } = await params;
 
   const authHeader = req.headers.get('Authorization');
   if (!authHeader) {
@@ -49,7 +50,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
     order = await prismadb.order.findFirst({
       where: {
         userId: userId,
-        storeId: params.storeId,
+        storeId: storeId,
         isPaid: false,
       },
       include: {

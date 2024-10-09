@@ -3,15 +3,16 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
-export async function GET(req: Request, { params }: { params: { billboardId: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ billboardId: string }> }) {
   try {
-    if (!params.billboardId) {
+    const { billboardId } = await params;
+    if (billboardId) {
       return new NextResponse('Billboard id is required', { status: 400 });
     }
 
     const billboard = await prismadb.billboard.findUnique({
       where: {
-        id: params.billboardId,
+        id: billboardId,
       },
     });
 
@@ -22,8 +23,9 @@ export async function GET(req: Request, { params }: { params: { billboardId: str
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { billboardId: string; storeId: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ billboardId: string; storeId: string }> }) {
   try {
+    const { billboardId, storeId } = await params;
     const session = await auth();
     const userId = session?.user.id;
 
@@ -31,13 +33,13 @@ export async function DELETE(req: Request, { params }: { params: { billboardId: 
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    if (!params.billboardId) {
+    if (!billboardId) {
       return new NextResponse('Billboard id is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });
@@ -48,7 +50,7 @@ export async function DELETE(req: Request, { params }: { params: { billboardId: 
 
     const billboard = await prismadb.billboard.delete({
       where: {
-        id: params.billboardId,
+        id: billboardId,
       },
     });
 
@@ -59,8 +61,9 @@ export async function DELETE(req: Request, { params }: { params: { billboardId: 
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { billboardId: string; storeId: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ billboardId: string; storeId: string }> }) {
   try {
+    const { billboardId, storeId } = await params;
     const session = await auth();
     const userId = session?.user.id;
 
@@ -80,13 +83,13 @@ export async function PATCH(req: Request, { params }: { params: { billboardId: s
       return new NextResponse('Image URL is required', { status: 400 });
     }
 
-    if (!params.billboardId) {
+    if (!billboardId) {
       return new NextResponse('Billboard id is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: storeId,
         adminId: userId,
       },
     });
@@ -97,7 +100,7 @@ export async function PATCH(req: Request, { params }: { params: { billboardId: s
 
     const billboard = await prismadb.billboard.update({
       where: {
-        id: params.billboardId,
+        id: billboardId,
       },
       data: {
         label,
