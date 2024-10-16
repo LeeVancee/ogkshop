@@ -1,18 +1,22 @@
-import prismadb from '@/lib/prismadb';
+'use client';
 
 import { SizeForm } from './components/size-form';
+import { use } from 'react';
+import { useGetSize } from '@/features/manange/api/use-get-size';
+import HomeLoader from '@/components/loader/home-loader';
 
 interface SizePageProps {
   params: Promise<{ sizeId: string }>;
 }
 
-const SizePage = async ({ params }: SizePageProps) => {
-  const { sizeId } = await params;
-  const size = await prismadb.size.findUnique({
-    where: {
-      id: sizeId,
-    },
-  });
+const SizePage = ({ params }: SizePageProps) => {
+  const { sizeId } = use(params);
+
+  const { data: size, isLoading } = useGetSize(sizeId);
+
+  if (isLoading || !size) {
+    return <HomeLoader />;
+  }
 
   return (
     <div className="flex-col">

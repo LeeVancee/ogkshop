@@ -9,15 +9,19 @@ import { Heading } from '@/components/backside/heading';
 import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
 
-import { columns, SizeColumn } from './columns';
+import { columns } from './columns';
+import { useGetSizes } from '@/features/manange/api/use-get-size';
+import HomeLoader from '@/components/loader/home-loader';
 
-interface SizesClientProps {
-  data: SizeColumn[];
-}
-
-export const SizesClient = ({ data }: SizesClientProps) => {
+export const SizesClient = () => {
   const params = useParams();
   const router = useRouter();
+
+  const { data, isLoading } = useGetSizes(params.storeId as string);
+
+  if (isLoading || !data) {
+    return <HomeLoader />;
+  }
 
   return (
     <>

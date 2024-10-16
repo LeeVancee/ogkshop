@@ -1,17 +1,21 @@
-import prismadb from '@/lib/prismadb';
+'use client';
 
 import { ColorForm } from './components/color-form';
+import { use } from 'react';
+import { useGetColor } from '@/features/manange/api/use-get-color';
+import HomeLoader from '@/components/loader/home-loader';
 interface ColorPageProps {
   params: Promise<{ colorId: string }>;
 }
 
-const ColorPage = async ({ params }: ColorPageProps) => {
-  const { colorId } = await params;
-  const color = await prismadb.color.findUnique({
-    where: {
-      id: colorId,
-    },
-  });
+const ColorPage = ({ params }: ColorPageProps) => {
+  const { colorId } = use(params);
+
+  const { data: color, isLoading } = useGetColor(colorId);
+
+  if (isLoading || !color) {
+    return <HomeLoader />;
+  }
 
   return (
     <div className="flex-col">

@@ -1,6 +1,10 @@
-import prismadb from '@/lib/prismadb';
+'use client';
 
 import { CategoryForm } from './components/category-form';
+import { use } from 'react';
+import { useGetBillboards } from '@/features/manange/api/use-get-billboard';
+import { useGetCategory } from '@/features/manange/api/use-get-category';
+import HomeLoader from '@/components/loader/home-loader';
 
 interface CategoryPageProps {
   params: Promise<{
@@ -9,20 +13,18 @@ interface CategoryPageProps {
   }>;
 }
 
-const CategoryPage = async ({ params }: CategoryPageProps) => {
-  const { categoryId, storeId } = await params;
+const CategoryPage = ({ params }: CategoryPageProps) => {
+  const { storeId, categoryId } = use(params);
+  const { data: category, isLoading: isLoadingCategory } = useGetCategory(categoryId);
+  const { data: billboards, isLoading: isLoadingBillboards } = useGetBillboards(storeId);
 
-  const category = await prismadb.category.findUnique({
-    where: {
-      id: categoryId,
-    },
-  });
-
-  const billboards = await prismadb.billboard.findMany({
-    where: {
-      storeId: storeId,
-    },
-  });
+  const isLoading = isLoadingCategory || isLoadingBillboards;
+  if (isLoading) {
+    return <HomeLoader />;
+  }
+  if (!category || !billboards) {
+    return <div>No category or billboards found</div>;
+  }
 
   return (
     <div className="flex-col">
