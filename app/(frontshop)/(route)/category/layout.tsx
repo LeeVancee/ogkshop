@@ -2,8 +2,7 @@ import Container from '@/components/ui/container';
 import React, { Suspense } from 'react';
 import MobileFilters from './[categoryName]/components/mobile-filters';
 import Filter from './[categoryName]/components/filter';
-import getColors from '@/actions/get-colors';
-import getSizes from '@/actions/get-sizes';
+import { getColors, getSizes } from '@/features/shop/actions';
 
 const storeId = process.env.NEXT_PUBLIC_STORE_ID!;
 
