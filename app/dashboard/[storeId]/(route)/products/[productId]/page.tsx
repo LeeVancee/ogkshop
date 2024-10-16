@@ -1,6 +1,12 @@
 import prismadb from '@/lib/prismadb';
 
 import { ProductForm } from './components/product-form';
+import { use } from 'react';
+import { useGetProduct } from '@/features/manange/api/use-get-product';
+import { useGetCategories } from '@/features/manange/api/use-get-category';
+import { useGetColors } from '@/features/manange/api/use-get-color';
+import { useGetSizes } from '@/features/manange/api/use-get-size';
+import HomeLoader from '@/components/loader/home-loader';
 
 interface ProductPageProps {
   params: Promise<{
@@ -10,40 +16,28 @@ interface ProductPageProps {
 }
 
 const ProductPage = async ({ params }: ProductPageProps) => {
-  const { storeId, productId } = await params;
-  const product = await prismadb.product.findUnique({
-    where: {
-      id: productId,
-    },
-    include: {
-      images: true,
-      sizes: true,
-      colors: true,
-    },
-  });
+  const { storeId, productId } = use(params);
+  const { data: product, isLoading: productLoading } = useGetProduct(productId);
+  const { data: categories, isLoading: categoriesLoading } = useGetCategories(storeId);
+  const { data: colors, isLoading: colorsLoading } = useGetColors(storeId);
+  const { data: sizes, isLoading: sizesLoading } = useGetSizes(storeId);
 
-  const categories = await prismadb.category.findMany({
-    where: {
-      storeId: storeId,
-    },
-  });
+  if (productLoading || categoriesLoading || colorsLoading || sizesLoading) {
+    return <HomeLoader />;
+  }
 
-  const sizes = await prismadb.size.findMany({
-    where: {
-      storeId: storeId,
-    },
-  });
-
-  const colors = await prismadb.color.findMany({
-    where: {
-      storeId: storeId,
-    },
-  });
+  if (!product || !categories || !colors || !sizes) {
+    return <div>No data available</div>;
+  }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ProductForm categories={categories} colors={colors} sizes={sizes} initialData={product} />
+        <div className="flex-col">
+          <div className="flex-1 space-y-4 p-8 pt-6">
+            <ProductForm categories={categories} colors={colors} sizes={sizes} initialData={product} />
+          </div>
+        </div>
       </div>
     </div>
   );

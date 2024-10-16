@@ -23,10 +23,20 @@ export interface Billboard {
   storeId: string;
 }
 
-export interface Category {
+/* export interface Category {
   id: string;
   name: string;
   billboard: Billboard;
+} */
+
+export interface Category {
+  id: string;
+  storeId: string;
+  billboardId: string;
+  // billboardLabel: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Size {

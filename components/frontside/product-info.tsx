@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import Gallery from './gallery';
-import getProduct from '@/actions/get-product';
 import Info from './info';
 import { useGetProduct } from '@/features/shop/api/use-get-product';
 import ProductInfoLoader from '../loader/productInfo-loader';

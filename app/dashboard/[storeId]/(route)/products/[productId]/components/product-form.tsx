@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trash } from 'lucide-react';
-import { Category, Color, Image, Product, Size } from '@prisma/client';
+
 import { useParams, useRouter } from 'next/navigation';
 
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,8 @@ import ImageUpload from '@/components/backside/image-upload';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MultiSelect } from '@/components/multiple-select';
 import ky from 'ky';
+import { Category, Color, Image, Product, Size } from '@/types';
+import { CategoryColumn } from '@/features/manange/type';
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
@@ -40,9 +42,10 @@ interface ProductFormProps {
         images: Image[];
         sizes: Size[];
         colors: Color[];
+        quantity: number;
       })
     | null;
-  categories: Category[];
+  categories: CategoryColumn[];
   colors: Color[];
   sizes: Size[];
 }

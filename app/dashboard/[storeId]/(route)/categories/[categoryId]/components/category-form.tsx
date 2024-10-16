@@ -15,16 +15,7 @@ import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ky from 'ky';
-import { Billboard } from '@/types';
-
-type Category = {
-  id: string;
-  storeId: string;
-  billboardId: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import { Billboard, Category } from '@/types';
 
 const formSchema = z.object({
   name: z.string().min(2),

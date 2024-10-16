@@ -5,23 +5,23 @@ import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 import { Category } from '@/types';
+import { useGetCategories } from '@/features/shop/api/use-get-categories';
 
-interface MainNavProps {
-  data: Category[];
-}
-
-const MainNav = ({ data }: MainNavProps) => {
+const MainNav = () => {
   const pathname = usePathname();
+  const { data, isLoading } = useGetCategories();
 
-  const routes = data.map((route) => ({
+  const routes = data?.map((route: Category) => ({
     href: `/category/${route.name}`,
     label: route.name,
     active: pathname === `/category/${route.name}`,
   }));
 
+  if (isLoading) return null;
+
   return (
     <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
-      {routes.map((route) => (
+      {routes?.map((route: any) => (
         <Link
           key={route.href}
           href={route.href}

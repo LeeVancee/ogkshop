@@ -8,16 +8,19 @@ import { DataTable } from '@/components/backside/data-table';
 import { Heading } from '@/components/backside/heading';
 import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
+import { columns } from './columns';
+import { useGetProducts } from '@/features/manange/api/use-get-product';
+import HomeLoader from '@/components/loader/home-loader';
 
-import { ProductColumn, columns } from './columns';
-
-interface ProductsClientProps {
-  data: ProductColumn[];
-}
-
-export const ProductsClient = ({ data }: ProductsClientProps) => {
+export const ProductsClient = () => {
   const params = useParams();
   const router = useRouter();
+
+  const { data, isLoading } = useGetProducts(params.storeId as string);
+
+  if (isLoading || !data) {
+    return <HomeLoader />;
+  }
 
   return (
     <>
@@ -28,7 +31,7 @@ export const ProductsClient = ({ data }: ProductsClientProps) => {
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable searchKey="name" columns={columns as any} data={data} />
       <Heading title="API" description="API Calls for Products" />
       <Separator />
       <ApiList entityName="products" entityIdName="productId" />

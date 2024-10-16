@@ -1,10 +1,10 @@
-import getCategories from '@/actions/get-categories';
 import { useQuery } from '@tanstack/react-query';
+import { getCategories } from '../actions';
 
-export const useGetCategories = ({ storeId }: { storeId: string }) => {
+export const useGetCategories = () => {
   const query = useQuery({
     queryKey: ['categories'],
-    queryFn: async () => await getCategories({ storeId }),
+    queryFn: async () => await getCategories(),
   });
   return query;
 };

@@ -10,12 +10,7 @@ export default function HomepageClient() {
   const { data: products, isLoading: productsLoading } = useGetFeatured();
   const isLoading = billboardLoading || productsLoading;
 
-  if (isLoading) {
-    return <HomeLoader />;
-  }
-
-  if (!billboard || !products) {
-    console.error('Billboard or products not found');
+  if (!billboard || !products || isLoading) {
     return null;
   }
 

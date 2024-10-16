@@ -1,7 +1,7 @@
 'use client';
 
 import { Loader } from '@/components/backside/loader';
-import { useGetStore } from '@/hooks/use-get-store';
+import { useGetStore } from '@/features/manange/api/use-get-store';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

@@ -1,4 +1,3 @@
-import getCategories from '@/actions/get-categories';
 import { useQuery } from '@tanstack/react-query';
 import { getProduct } from '../actions';
 

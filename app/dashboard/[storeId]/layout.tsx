@@ -1,44 +1,17 @@
-import { redirect } from 'next/navigation';
-import prismadb from '@/lib/prismadb';
 import NavBar from '@/components/backside/nav';
-import React, { Suspense } from 'react';
+import React from 'react';
 import StoreSwitcher from '@/components/backside/store-switcher';
-import { auth } from '@/auth';
 import { DropDown } from '@/components/backside/DropDown';
 import Link from 'next/link';
 
-export default async function DashboardLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ storeId: string }>;
-}) {
-  const session = await auth();
-  const adminId = session?.user.id;
-  const { storeId } = await params;
-  const store = await prismadb.store.findFirst({
-    where: {
-      id: storeId,
-    },
-  });
-
-  if (!store) {
-    redirect('/');
-  }
-  const stores = await prismadb.store.findMany({
-    where: {
-      adminId: adminId,
-    },
-  });
-
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-muted/40 md:block">
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-              <StoreSwitcher items={stores} />
+              <StoreSwitcher />
             </div>
             <div className="flex-1">
               <NavBar />

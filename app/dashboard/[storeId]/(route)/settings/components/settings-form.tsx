@@ -18,6 +18,7 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { ApiAlert } from '@/components/backside/api/api-alert';
 import { useOrigin } from '@/hooks/use-origin';
 import ky from 'ky';
+import { useGetSettings } from '@/features/manange/api/use-get-settings';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -29,11 +30,11 @@ interface SettingsFormProps {
   initialData: Store;
 }
 
-export const SettingsForm = ({ initialData }: SettingsFormProps) => {
+export const SettingsForm = () => {
   const params = useParams();
   const router = useRouter();
   const origin = useOrigin();
-
+  const { data: initialData, isLoading } = useGetSettings(params.storeId as string);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

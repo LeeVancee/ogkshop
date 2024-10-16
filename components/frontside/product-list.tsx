@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import ProductCard from './product-card';
-import getProducts from '@/actions/get-products';
 import { useGetProducts } from '@/features/shop/api/use-get-products';
 import ProductListLoader from '../loader/productlist-loader';
 

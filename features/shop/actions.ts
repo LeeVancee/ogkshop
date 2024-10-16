@@ -19,16 +19,17 @@ export const getBillboard = async (id: string): Promise<Billboard | null> => {
 interface GetCategoriesProps {
   storeId: string;
 }
-export const getCategories = async ({ storeId }: GetCategoriesProps): Promise<Category[]> => {
+const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID!;
+export const getCategories = async (): Promise<Category[]> => {
   try {
-    if (!storeId) {
+    if (!STORE_ID) {
       console.error('Store id is required');
       return [];
     }
 
     const categories = await prismadb.category.findMany({
       where: {
-        storeId: storeId,
+        storeId: STORE_ID,
       },
       include: {
         billboard: true, // 假设Category类型包含billboard
@@ -39,6 +40,10 @@ export const getCategories = async ({ storeId }: GetCategoriesProps): Promise<Ca
     const formattedCategories: Category[] = categories.map((category) => ({
       id: category.id,
       name: category.name,
+      storeId: category.storeId,
+      billboardId: category.billboardId,
+      createdAt: category.createdAt,
+      updatedAt: category.updatedAt,
       billboard: {
         id: category.billboard.id,
         label: category.billboard.label,
@@ -155,7 +160,10 @@ export const getProduct = async (productId: string): Promise<Product | null> => 
       category: {
         id: product.category.id,
         name: product.category.name,
-        billboard: product.category.billboard as Billboard, // Ensure billboard matches Billboard type
+        storeId: product.category.storeId,
+        billboardId: product.category.billboardId,
+        createdAt: product.category.createdAt,
+        updatedAt: product.category.updatedAt,
       },
     };
 
@@ -235,7 +243,11 @@ export const getProducts = async (query: Query): Promise<Product[]> => {
       category: {
         id: product.category.id,
         name: product.category.name,
-        billboard: product.category.billboard as Billboard, // 假设billboard数据结构匹配
+        storeId: product.category.storeId,
+        billboardId: product.category.billboardId,
+        createdAt: product.category.createdAt,
+        updatedAt: product.category.updatedAt,
+        billboard: product.category.billboard as Billboard,
       },
     }));
 
