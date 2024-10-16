@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { useActiveTabStore } from '@/hooks/use-activeTab';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ky from 'ky';

@@ -1,5 +1,4 @@
 'use client';
-import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import Currency from '@/components/frontside/currency';
 import useCart from '@/hooks/use-cart';

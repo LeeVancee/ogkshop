@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import axios from 'axios';
 import { Truck, Package, MapPin, Phone, DollarSign } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ky from 'ky';

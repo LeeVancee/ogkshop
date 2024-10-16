@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import { useState } from 'react';
 import { Copy, MoreHorizontal, Trash } from 'lucide-react';
 import { toast } from 'react-hot-toast';
