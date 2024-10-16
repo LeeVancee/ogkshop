@@ -2,7 +2,7 @@ import Skeleton from '@/components/ui/skeleton';
 
 export default function FeaturedLoader() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-8">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="group cursor-pointer rounded-xl border p-3 space-y-4">
           <div className="aspect-square rounded-xl relative">

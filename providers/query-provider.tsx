@@ -10,7 +10,8 @@ function makeQueryClient() {
       queries: {
         // 使用 SSR 時，我們通常希望將默認的 staleTime 設置為大於 0 的值
         // 以避免在客戶端立即重新獲取數據
-        // staleTime: 60 * 1000,
+        staleTime: 30 * 60 * 1000,
+        refetchOnWindowFocus: false,
       },
     },
   });
