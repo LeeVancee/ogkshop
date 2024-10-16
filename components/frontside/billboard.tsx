@@ -1,12 +1,17 @@
+'use client';
 import Image from 'next/image';
-import Link from 'next/link';
-import { type Billboard } from '@/types';
-import getBillboard from '@/actions/get-billboard';
+
+import { useGetBillboard } from '@/features/shop/api/use-get-billboard';
+import BillboardLoader from '../loader/billboard-loader';
 
 const billboardId = process.env.NEXT_PUBLIC_BILLBOARD_ID;
 
-const Billboard = async () => {
-  const billboard: Billboard | null = await getBillboard(billboardId!);
+const Billboard = () => {
+  const { data: billboard, isLoading } = useGetBillboard(billboardId!);
+
+  /*  if (isLoading) {
+    return <BillboardLoader />;
+  } */
 
   if (!billboard) {
     console.error('Billboard not found');
@@ -21,12 +26,6 @@ const Billboard = async () => {
           <p className="text-pretty text-lg text-neutral-600">
             {'Discover unique items that blend style and functionality.'}
           </p>
-          {/* <Link
-            href="/category/accessories"
-            className="inline-flex h-12 items-center justify-center rounded-full bg-neutral-900 px-8 font-medium text-neutral-50 transition-colors hover:bg-neutral-900/90 focus:outline-none focus:ring-2 focus:ring-neutral-950"
-          >
-            Shop Now
-          </Link> */}
         </div>
         <div className="w-full h-full flex items-center justify-center">
           <Image

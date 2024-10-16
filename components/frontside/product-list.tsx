@@ -1,6 +1,9 @@
+'use client';
 import React from 'react';
 import ProductCard from './product-card';
 import getProducts from '@/actions/get-products';
+import { useGetProducts } from '@/features/shop/api/use-get-products';
+import ProductListLoader from '../loader/productlist-loader';
 
 interface ProductListProps {
   categoryName: string;
@@ -8,15 +11,19 @@ interface ProductListProps {
   sizeName: string;
 }
 
-export default async function ProductList({ categoryName, colorName, sizeName }: ProductListProps) {
-  const products = await getProducts({
+export default function ProductList({ categoryName, colorName, sizeName }: ProductListProps) {
+  const { data: products, isLoading } = useGetProducts({
     categoryName: categoryName,
     colorName: colorName,
     sizeName: sizeName,
   });
 
-  if (products.length === 0) {
-    return <div className=" flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
+  if (isLoading) {
+    return <ProductListLoader />;
+  }
+
+  if (!products) {
+    return <div className="flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
   }
 
   return (

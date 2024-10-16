@@ -1,12 +1,23 @@
+'use client';
+import { useGetFeatured } from '@/features/shop/api/use-get-featured';
 import ProductCard from './product-card';
-import { getFeatured } from '@/actions/get-featured';
+import FeaturedLoader from '../loader/featured-loader';
 
 interface FeaturedListProps {
   title: string;
 }
 
-const FeaturedList = async ({ title }: FeaturedListProps) => {
-  const featuredProducts = await getFeatured();
+const FeaturedList = ({ title }: FeaturedListProps) => {
+  const { data: featuredProducts, isLoading } = useGetFeatured();
+
+  if (isLoading) {
+    return <FeaturedLoader />;
+  }
+
+  if (!featuredProducts) {
+    return <div className="flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
+  }
+
   return (
     <div className="space-y-4">
       <h3 className="font-bold text-3xl">{title}</h3>

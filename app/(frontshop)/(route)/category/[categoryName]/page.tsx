@@ -16,11 +16,7 @@ const CategoryPage = async ({ params, searchParams }: CategoryPageProps) => {
   const { categoryName } = await params;
   const { colorName, sizeName } = await searchParams;
 
-  return (
-    <Suspense fallback={<ProductListLoader />}>
-      <ProductList categoryName={categoryName} colorName={colorName} sizeName={sizeName} />
-    </Suspense>
-  );
+  return <ProductList categoryName={categoryName} colorName={colorName} sizeName={sizeName} />;
 };
 
 export default CategoryPage;

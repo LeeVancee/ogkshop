@@ -1,10 +1,17 @@
+'use client';
 import React from 'react';
 import Gallery from './gallery';
 import getProduct from '@/actions/get-product';
 import Info from './info';
+import { useGetProduct } from '@/features/shop/api/use-get-product';
+import ProductInfoLoader from '../loader/productInfo-loader';
 
-export default async function ProductInfo({ productId }: { productId: string }) {
-  const product = await getProduct(productId);
+export default function ProductInfo({ productId }: { productId: string }) {
+  const { data: product, isLoading } = useGetProduct({ productId });
+
+  if (isLoading) {
+    return <ProductInfoLoader />;
+  }
 
   if (!product) {
     return null;
