@@ -1,14 +1,11 @@
 'use client';
-
 import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trash } from 'lucide-react';
-import { Billboard } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -17,6 +14,7 @@ import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import ImageUpload from '@/components/backside/image-upload';
 import ky from 'ky';
+import { Billboard } from '@/types';
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -24,7 +22,6 @@ const formSchema = z.object({
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
-
 interface BillboardFormProps {
   initialData: Billboard | null;
 }

@@ -10,14 +10,26 @@ import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
 
 import { columns, BillboardColumn } from './columns';
+import { useGetBillboards } from '@/features/manange/api/use-get-billboard';
+import HomeLoader from '@/components/loader/home-loader';
 
 interface BillboardClientProps {
   data: BillboardColumn[];
 }
 
-export const BillboardClient = ({ data }: BillboardClientProps) => {
+export const BillboardClient = () => {
   const params = useParams();
   const router = useRouter();
+
+  const { data, isLoading } = useGetBillboards(params.storeId as string);
+
+  if (isLoading) {
+    return <HomeLoader />;
+  }
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <>
