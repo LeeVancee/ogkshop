@@ -39,6 +39,7 @@ export const getBillboards = async (storeId: string) => {
     label: item.label,
     imageUrl: item.imageUrl,
     storeId: item.storeId,
+    createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
 
   return formattedBillboards;

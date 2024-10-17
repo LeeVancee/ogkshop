@@ -79,7 +79,7 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="USER">User</SelectItem>
-              {/* <SelectItem value="ADMIN">Admin</SelectItem> */}
+              <SelectItem value="ADMIN">Admin</SelectItem>
             </SelectContent>
           </Select>
 

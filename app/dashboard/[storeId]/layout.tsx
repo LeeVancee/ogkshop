@@ -22,9 +22,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <header className="flex h-14 items-center justify-between border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
             <div className="flex-1">{/* 这里可以放置其他左侧内容 */}</div>
             <div className="flex items-center space-x-4">
-              <Link href="/" className="text-sm ">
-                Back to store
-              </Link>
               <DropDown />
             </div>
           </header>
