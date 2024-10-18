@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import ky from 'ky';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 
 export const useCreateSize = () => {
   const params = useParams();
