@@ -13,14 +13,14 @@ const ColorPage = ({ params }: ColorPageProps) => {
 
   const { data: color, isLoading } = useGetColor(colorId);
 
-  if (isLoading || !color) {
+  if (isLoading) {
     return <HomeLoader />;
   }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ColorForm initialData={color} />
+        <ColorForm initialData={color!} />
       </div>
     </div>
   );

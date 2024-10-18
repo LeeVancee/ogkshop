@@ -16,6 +16,12 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ky from 'ky';
 import { Billboard, Category } from '@/types';
+import {
+  useActionDeleteCategory,
+  useCreateCategory,
+  useDeleteCategory,
+  useUpdateCategory,
+} from '@/features/manange/mutation/category';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -49,46 +55,30 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
     },
   });
 
-  const onSubmit = async (data: CategoryFormValues) => {
-    try {
-      setLoading(true);
-      if (initialData) {
-        await ky.patch(`/api/${params.storeId}/categories/${params.categoryId}`, { json: data });
-      } else {
-        await ky.post(`/api/${params.storeId}/categories`, { json: data });
-      }
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/categories`);
-      toast.success(toastMessage);
-    } catch (error: any) {
-      toast.error('Something went wrong.');
-    } finally {
-      setLoading(false);
+  const { mutate: createCategory, isPending: isCreatePending } = useCreateCategory();
+  const { mutate: updateCategory, isPending: isUpdatePending } = useUpdateCategory();
+  const { mutate: deleteCategory, isPending: isDeletePending } = useDeleteCategory();
+  const isPending = isCreatePending || isUpdatePending || isDeletePending;
+
+  const onSubmit = (data: CategoryFormValues) => {
+    if (initialData) {
+      updateCategory(data);
+    } else {
+      createCategory(data);
     }
   };
 
   const onDelete = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/categories/${params.categoryId}`);
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/categories`);
-      toast.success('Category deleted.');
-    } catch (error: any) {
-      toast.error('Make sure you removed all products using this category first.');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    deleteCategory();
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={loading} variant="destructive" size="sm" onClick={() => setOpen(true)}>
+          <Button disabled={isDeletePending} variant="destructive" size="sm" onClick={() => setOpen(true)}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -104,7 +94,7 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Category name" {...field} />
+                    <Input disabled={isPending} placeholder="Category name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,7 +107,7 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
                 <FormItem>
                   <FormLabel>Billboard</FormLabel>
                   <Select
-                    disabled={loading}
+                    disabled={isPending}
                     onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
@@ -140,7 +130,7 @@ export const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => 
               )}
             />
           </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isPending} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

@@ -17,6 +17,7 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { SizeColumn } from './columns';
 import ky from 'ky';
+import { useActionDeleteSize } from '@/features/manange/mutation/size';
 
 interface CellActionProps {
   data: SizeColumn;
@@ -26,20 +27,14 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { mutate: deleteSize, isPending } = useActionDeleteSize();
 
   const onConfirm = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/sizes/${data.id}`);
-      toast.success('Size deleted.');
-      router.refresh();
-    } catch (error) {
-      toast.error('Make sure you removed all products using this size first.');
-    } finally {
-      setOpen(false);
-      setLoading(false);
-    }
+    deleteSize(data.id, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   const onCopy = (id: string) => {
@@ -49,7 +44,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

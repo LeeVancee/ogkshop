@@ -22,14 +22,11 @@ const CategoryPage = ({ params }: CategoryPageProps) => {
   if (isLoading) {
     return <HomeLoader />;
   }
-  if (!category || !billboards) {
-    return <div>No category or billboards found</div>;
-  }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <CategoryForm billboards={billboards} initialData={category} />
+        <CategoryForm billboards={billboards!} initialData={category!} />
       </div>
     </div>
   );

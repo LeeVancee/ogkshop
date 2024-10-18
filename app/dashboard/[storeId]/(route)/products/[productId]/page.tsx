@@ -1,4 +1,4 @@
-import prismadb from '@/lib/prismadb';
+'use client';
 
 import { ProductForm } from './components/product-form';
 import { use } from 'react';
@@ -15,7 +15,7 @@ interface ProductPageProps {
   }>;
 }
 
-const ProductPage = async ({ params }: ProductPageProps) => {
+const ProductPage = ({ params }: ProductPageProps) => {
   const { storeId, productId } = use(params);
   const { data: product, isLoading: productLoading } = useGetProduct(productId);
   const { data: categories, isLoading: categoriesLoading } = useGetCategories(storeId);
@@ -26,16 +26,12 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     return <HomeLoader />;
   }
 
-  if (!product || !categories || !colors || !sizes) {
-    return <div>No data available</div>;
-  }
-
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex-col">
           <div className="flex-1 space-y-4 p-8 pt-6">
-            <ProductForm categories={categories} colors={colors} sizes={sizes} initialData={product} />
+            <ProductForm categories={categories!} colors={colors!} sizes={sizes!} initialData={product!} />
           </div>
         </div>
       </div>

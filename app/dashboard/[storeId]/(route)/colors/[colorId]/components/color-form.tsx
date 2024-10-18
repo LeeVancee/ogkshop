@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import ky from 'ky';
+import { useCreateColor, useDeleteColor, useUpdateColor } from '@/features/manange/mutation/color';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -35,7 +36,6 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit color' : 'Create color';
   const description = initialData ? 'Edit a color.' : 'Add a new color';
@@ -49,46 +49,30 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
     },
   });
 
+  const { mutate: createColor, isPending: isCreatePending } = useCreateColor();
+  const { mutate: updateColor, isPending: isUpdatePending } = useUpdateColor();
+  const { mutate: deleteColor, isPending: isDeletePending } = useDeleteColor();
+  const isPending = isCreatePending || isUpdatePending || isDeletePending;
+
   const onSubmit = async (data: ColorFormValues) => {
-    try {
-      setLoading(true);
-      if (initialData) {
-        await ky.patch(`/api/${params.storeId}/colors/${params.colorId}`, { json: data });
-      } else {
-        await ky.post(`/api/${params.storeId}/colors`, { json: data });
-      }
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/colors`);
-      toast.success(toastMessage);
-    } catch (error: any) {
-      toast.error('Something went wrong.');
-    } finally {
-      setLoading(false);
+    if (initialData) {
+      updateColor(data);
+    } else {
+      createColor(data);
     }
   };
 
   const onDelete = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/colors/${params.colorId}`);
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/colors`);
-      toast.success('Color deleted.');
-    } catch (error: any) {
-      toast.error('Make sure you removed all products using this color first.');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    deleteColor();
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={loading} variant="destructive" size="sm" onClick={() => setOpen(true)}>
+          <Button disabled={isPending} variant="destructive" size="sm" onClick={() => setOpen(true)}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -104,7 +88,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Color name" {...field} />
+                    <Input disabled={isPending} placeholder="Color name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,7 +102,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
                   <FormLabel>Value</FormLabel>
                   <FormControl>
                     <div className="flex items-center gap-x-4">
-                      <Input disabled={loading} placeholder="Color value" {...field} />
+                      <Input disabled={isPending} placeholder="Color value" {...field} />
                       <div className="border p-4 rounded-full" style={{ backgroundColor: field.value }} />
                     </div>
                   </FormControl>
@@ -127,7 +111,7 @@ export const ColorForm = ({ initialData }: ColorFormProps) => {
               )}
             />
           </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isPending} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

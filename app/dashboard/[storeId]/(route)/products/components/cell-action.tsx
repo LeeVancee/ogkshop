@@ -17,6 +17,7 @@ import {
 
 import { ProductColumn } from './columns';
 import ky from 'ky';
+import { useActionDeleteProduct } from '@/features/manange/mutation/product';
 
 interface CellActionProps {
   data: ProductColumn;
@@ -27,19 +28,13 @@ export const CellAction = ({ data }: CellActionProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
-
+  const { mutate: deleteProduct, isPending } = useActionDeleteProduct();
   const onConfirm = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/products/${data.id}`);
-      toast.success('Product deleted.');
-      router.refresh();
-    } catch (error) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    deleteProduct(data.id, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   const onCopy = (id: string) => {
@@ -49,7 +44,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

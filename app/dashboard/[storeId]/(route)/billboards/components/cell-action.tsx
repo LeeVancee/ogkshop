@@ -14,9 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
-
 import { BillboardColumn } from './columns';
-import ky from 'ky';
+import { useActionDeleteBillboard } from '@/features/manange/mutation/billboard';
 
 interface CellActionProps {
   data: BillboardColumn;
@@ -26,20 +25,13 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const onConfirm = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/billboards/${data.id}`);
-      toast.success('Billboard deleted.');
-      router.refresh();
-    } catch (error) {
-      toast.error('Make sure you removed all categories using this billboard first.');
-    } finally {
-      setOpen(false);
-      setLoading(false);
-    }
+  const { mutate, isPending } = useActionDeleteBillboard();
+  const onConfirm = () => {
+    mutate(data.id, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   const onCopy = (id: string) => {
@@ -49,7 +41,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

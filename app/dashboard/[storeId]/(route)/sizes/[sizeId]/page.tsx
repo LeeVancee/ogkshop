@@ -14,14 +14,14 @@ const SizePage = ({ params }: SizePageProps) => {
 
   const { data: size, isLoading } = useGetSize(sizeId);
 
-  if (isLoading || !size) {
+  if (isLoading) {
     return <HomeLoader />;
   }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SizeForm initialData={size} />
+        <SizeForm initialData={size!} />
       </div>
     </div>
   );

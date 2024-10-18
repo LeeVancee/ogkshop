@@ -17,6 +17,7 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { CategoryColumn } from './columns';
 import ky from 'ky';
+import { useActionDeleteCategory } from '@/features/manange/mutation/category';
 
 interface CellActionProps {
   data: CategoryColumn;
@@ -26,20 +27,14 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { mutate: deleteCategory, isPending: isDeletePending } = useActionDeleteCategory();
 
   const onConfirm = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/categories/${data.id}`);
-      toast.success('Category deleted.');
-      router.refresh();
-    } catch (error) {
-      toast.error('Make sure you removed all products using this category first.');
-    } finally {
-      setOpen(false);
-      setLoading(false);
-    }
+    deleteCategory(data.id, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   const onCopy = (id: string) => {
@@ -49,7 +44,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isDeletePending} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

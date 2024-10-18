@@ -15,6 +15,7 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 import ImageUpload from '@/components/backside/image-upload';
 import ky from 'ky';
 import { Billboard } from '@/types';
+import { useCreateBillboard, useDeleteBillboard, useUpdateBillboard } from '@/features/manange/mutation/billboard';
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -38,6 +39,12 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const toastMessage = initialData ? 'Billboard updated.' : 'Billboard created.';
   const action = initialData ? 'Save changes' : 'Create';
 
+  const { mutate: createBillboard, isPending: isCreatePending } = useCreateBillboard();
+  const { mutate: updateBillboard, isPending: isUpdatePending } = useUpdateBillboard();
+  const { mutate: deleteBillboard, isPending: isDeletePending } = useDeleteBillboard();
+
+  const isPending = isCreatePending || isUpdatePending || isDeletePending;
+
   const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -46,46 +53,25 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
     },
   });
 
-  const onSubmit = async (data: BillboardFormValues) => {
-    try {
-      setLoading(true);
-      if (initialData) {
-        await ky.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, { json: data });
-      } else {
-        await ky.post(`/api/${params.storeId}/billboards`, { json: data });
-      }
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/billboards`);
-      toast.success(toastMessage);
-    } catch (error) {
-      toast.error('Something went wrong.');
-    } finally {
-      setLoading(false);
+  const onSubmit = (data: BillboardFormValues) => {
+    if (initialData) {
+      updateBillboard(data);
+    } else {
+      createBillboard(data);
     }
   };
 
   const onDelete = async () => {
-    try {
-      setLoading(true);
-      await ky.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
-      router.refresh();
-      router.push(`/dashboard/${params.storeId}/billboards`);
-      toast.success('Billboard deleted.');
-    } catch (error: any) {
-      toast.error('Make sure you removed all categories using this billboard first.');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    deleteBillboard();
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={loading} variant="destructive" size="sm" onClick={() => setOpen(true)}>
+          <Button disabled={isPending} variant="destructive" size="sm" onClick={() => setOpen(true)}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -102,7 +88,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
                 <FormControl>
                   <ImageUpload
                     value={field.value ? [field.value] : []}
-                    disabled={loading}
+                    disabled={isPending}
                     onChange={(url) => field.onChange(url)}
                     onRemove={() => field.onChange('')}
                   />
@@ -119,14 +105,14 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
                 <FormItem>
                   <FormLabel>Label</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Billboard label" {...field} />
+                    <Input disabled={isPending} placeholder="Billboard label" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isPending} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>
