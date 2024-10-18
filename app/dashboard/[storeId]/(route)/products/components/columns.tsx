@@ -1,7 +1,4 @@
-'use client';
-
 import { ColumnDef } from '@tanstack/react-table';
-
 import { CellAction } from './cell-action';
 
 export type ProductColumn = {
@@ -14,9 +11,23 @@ export type ProductColumn = {
   createdAt: string;
   isFeatured: boolean;
   isArchived: boolean;
+  images: string;
 };
 
-export const columns: ColumnDef<ProductColumn>[] = [
+export const columns: ColumnDef<ProductColumn, unknown>[] = [
+  {
+    accessorKey: 'images',
+    header: 'Image',
+    cell: ({ row }) => {
+      const imageUrls = row.original.images.split(', ');
+      const firstImageUrl = imageUrls[0] || '/placeholder-image.jpg';
+      return (
+        <div className="flex items-center justify-center">
+          <img src={firstImageUrl} alt={row.original.name} className="w-10 h-10 object-cover rounded-full" />
+        </div>
+      );
+    },
+  },
   {
     accessorKey: 'name',
     header: 'Name',
@@ -44,14 +55,14 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: 'color',
     header: 'Color',
-    cell: ({ row }) => <div className="flex items-center gap-x-2">{row.original.color}</div>,
   },
   {
     accessorKey: 'createdAt',
     header: 'Date',
   },
   {
-    id: 'actions',
+    accessorKey: 'id',
+    header: 'Actions',
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

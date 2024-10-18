@@ -8,7 +8,7 @@ import { DataTable } from '@/components/backside/data-table';
 import { Heading } from '@/components/backside/heading';
 import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
-import { columns } from './columns';
+import { columns, ProductColumn } from './columns';
 import { useGetProducts } from '@/features/manange/api/use-get-product';
 import HomeLoader from '@/components/loader/home-loader';
 
@@ -31,7 +31,7 @@ export const ProductsClient = () => {
         </Button>
       </div>
       <Separator />
-      <DataTable searchKey="name" columns={columns as any} data={data} />
+      <DataTable searchKey="name" columns={columns} data={data} />
       <Heading title="API" description="API Calls for Products" />
       <Separator />
       <ApiList entityName="products" entityIdName="productId" />

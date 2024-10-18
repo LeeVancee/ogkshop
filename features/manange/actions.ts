@@ -133,6 +133,7 @@ export const getProducts = async (storeId: string) => {
       category: true,
       sizes: true,
       colors: true,
+      images: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -148,6 +149,7 @@ export const getProducts = async (storeId: string) => {
     category: item.category.name,
     size: item.sizes.map((size) => size.name).join(', '),
     color: item.colors.map((color) => color.name).join(', '),
+    images: item.images.map((image) => image.url).join(', '),
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
   return formattedProducts;

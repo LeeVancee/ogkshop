@@ -2,7 +2,11 @@ import NavBar from '@/components/backside/nav';
 import React from 'react';
 import StoreSwitcher from '@/components/backside/store-switcher';
 import { DropDown } from '@/components/backside/DropDown';
-import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'OGKSHOP - Dashboard',
+};
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -185,20 +185,21 @@ interface Query {
 
 export const getProducts = async (query: Query): Promise<Product[]> => {
   try {
-    // 查找 categoryId
-    // 查找 categoryId
-    const category = await prismadb.category.findFirst({
-      where: { name: query.categoryName },
-      select: { id: true },
-    });
+    let category;
+    if (query.categoryName) {
+      category = await prismadb.category.findFirst({
+        where: { name: query.categoryName },
+        select: { id: true },
+      });
 
-    if (!category) {
-      return [];
+      if (!category) {
+        return [];
+      }
     }
     const products = await prismadb.product.findMany({
       where: {
         storeId: query.storeId,
-        categoryId: category.id,
+        categoryId: category?.id,
         colors: query.colorName
           ? {
               some: {

@@ -1,10 +1,4 @@
-import { format } from 'date-fns';
-
-import prismadb from '@/lib/prismadb';
-import { formatter } from '@/lib/utils';
-
 import { ProductsClient } from './components/client';
-import { ProductColumn } from './components/columns';
 
 const ProductsPage = async () => {
   return (

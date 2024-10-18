@@ -25,7 +25,7 @@ export interface SizeColumn {
   createdAt: string;
 }
 
-export interface ProductColumn {
+/* export interface ProductColumn {
   id: string;
   name: string;
   isFeatured: boolean;
@@ -33,7 +33,20 @@ export interface ProductColumn {
   price: string;
   category: string;
   size: string;
-}
+} */
+
+export type ProductColumn = {
+  id: string;
+  name: string;
+  price: string;
+  category: string;
+  size: string;
+  color: string;
+  createdAt: string;
+  isFeatured: boolean;
+  isArchived: boolean;
+  images: string;
+};
 
 export interface OrderColumn {
   id: string;
