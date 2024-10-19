@@ -16,7 +16,6 @@ import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { ApiAlert } from '@/components/backside/api/api-alert';
 import { useOrigin } from '@/hooks/use-origin';
 import { useGetSettings } from '@/features/manange/api/use-get-settings';
-import { useDeleteSettings, useUpdateSettings } from '@/features/manange/mutation/settings';
 import { useDeleteStore, useUpdateStore } from '@/features/manange/mutation/store';
 
 const formSchema = z.object({
