@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader } from '@/components/backside/loader';
+import HomeLoader from '@/components/loader/home-loader';
 import { useGetStore } from '@/features/manange/api/use-get-store';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <Loader />
+      <HomeLoader />
     </div>
   );
 }

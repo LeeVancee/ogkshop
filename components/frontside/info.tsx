@@ -48,7 +48,7 @@ const Info = ({ data }: InfoProps) => {
                 className={cn(
                   'border',
                   selectedSize?.id === size.id
-                    ? 'border-orange-500 text-orange-500'
+                    ? 'border-black text-black'
                     : 'border-gray-300 text-gray-700 dark:text-white dark:border-neutral-700'
                 )}
               >
@@ -68,7 +68,7 @@ const Info = ({ data }: InfoProps) => {
                 className={cn(
                   'border',
                   selectedColor?.id === color.id
-                    ? 'border-orange-500 text-orange-500'
+                    ? 'border-black text-black'
                     : 'border-gray-300 text-gray-700 dark:text-white dark:border-neutral-700'
                 )}
               >

@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
+import Image from 'next/image';
 
 export type ProductColumn = {
   id: string;
@@ -22,8 +23,10 @@ export const columns: ColumnDef<ProductColumn, unknown>[] = [
       const imageUrls = row.original.images.split(', ');
       const firstImageUrl = imageUrls[0] || '/placeholder-image.jpg';
       return (
-        <div className="flex items-center justify-center">
-          <img src={firstImageUrl} alt={row.original.name} className="w-10 h-10 object-cover rounded-full" />
+        <div className="flex items-center">
+          <div className="relative h-10 w-10 overflow-hidden rounded-full">
+            <Image src={firstImageUrl} alt={row.original.name} fill sizes="40px" className="object-cover" />
+          </div>
         </div>
       );
     },

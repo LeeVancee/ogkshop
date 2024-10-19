@@ -7,9 +7,6 @@ import { DropDown } from './DropDown';
 import { MobileSidebar } from './mobile-sidebar';
 
 import { SearchModal } from './modal/search-modal';
-import DesktopNav from '@/components/frontside/DesktopNav';
-
-const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID!;
 
 const Navbar = async () => {
   return (
@@ -20,7 +17,6 @@ const Navbar = async () => {
             <p className="font-bold text-xl">OGKSHOP</p>
           </Link>
           <div className="hidden lg:block">
-            {/*  <DesktopNav data={categories} /> */}
             <MainNav />
           </div>
         </div>

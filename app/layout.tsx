@@ -23,9 +23,11 @@ export default function RootLayout({
       <SessionProvider>
         <body>
           <ToastProvider />
-          <StoreModal />
           <ThemeProvider attribute="class" defaultTheme="system">
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <StoreModal />
+              {children}
+            </QueryProvider>
           </ThemeProvider>
         </body>
       </SessionProvider>

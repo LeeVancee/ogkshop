@@ -14,16 +14,19 @@ const FeaturedList = ({ title }: FeaturedListProps) => {
     return <FeaturedLoader />;
   }
 
-  if (!featuredProducts) {
+  if (!featuredProducts || featuredProducts.length === 0) {
     return <div className="flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
   }
+
+  // 只取前五个产品
+  const displayProducts = featuredProducts.slice(0, 5);
 
   return (
     <div className="space-y-4">
       <h3 className="font-bold text-3xl">{title}</h3>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {featuredProducts.map((item) => (
+        {displayProducts.map((item) => (
           <ProductCard key={item.id} data={item} />
         ))}
       </div>
