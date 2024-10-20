@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getGraphRevenue, getSalesCount, getStockCount, getTotalRevenue } from '../actions';
+import { getGraphRevenue, getSalesCount, getStockCount, getTotalRevenue } from '../queries';
 
 export const useGetTotalRevenue = (storeId: string) => {
   return useQuery({

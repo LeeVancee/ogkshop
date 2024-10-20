@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSettings } from '../actions';
+import { getSettings } from '../queries';
 
 export const useGetSettings = (storeId: string) => {
   return useQuery({

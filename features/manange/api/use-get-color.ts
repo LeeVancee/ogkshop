@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getColor, getColors } from '../actions';
+import { getColor, getColors } from '../queries';
 
 export const useGetColor = (colorId: string) => {
   return useQuery({

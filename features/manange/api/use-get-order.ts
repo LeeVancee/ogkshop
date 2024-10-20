@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getOrders } from '../actions';
+import { getOrders } from '../queries';
 
 export const useGetOrders = (storeId: string) => {
   return useQuery({

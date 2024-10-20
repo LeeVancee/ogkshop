@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getBillboard, getBillboards } from '../actions';
+import { getBillboard, getBillboards } from '../queries';
 
 export const useGetBillboard = (billboardId: string) => {
   const query = useQuery({
