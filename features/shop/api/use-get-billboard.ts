@@ -1,4 +1,4 @@
-import { getBillboard } from '../actions';
+import { getBillboard } from '../queries';
 
 import { useQuery } from '@tanstack/react-query';
 

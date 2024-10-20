@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getCategories, getColors } from '../actions';
+import { getCategories, getColors } from '../queries';
 
 export const useGetColors = ({ storeId }: { storeId: string }) => {
   const query = useQuery({

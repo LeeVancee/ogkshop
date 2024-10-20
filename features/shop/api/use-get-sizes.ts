@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSizes } from '../actions';
+import { getSizes } from '../queries';
 
 export const useGetSizes = ({ storeId }: { storeId: string }) => {
   const query = useQuery({
