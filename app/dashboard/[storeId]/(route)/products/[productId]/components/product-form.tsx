@@ -19,7 +19,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ImageUpload from '@/components/backside/image-upload';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MultiSelect } from '@/components/multiple-select';
-import ky from 'ky';
 import { Category, Color, Image, Product, Size } from '@/types';
 import { CategoryColumn } from '@/features/manange/type';
 import { useCreateProduct, useUpdateProduct, useDeleteProduct } from '@/features/manange/mutation/product';

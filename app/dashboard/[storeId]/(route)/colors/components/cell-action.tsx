@@ -16,7 +16,6 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { ColorColumn } from './columns';
-import ky from 'ky';
 import { useActionDeleteColor } from '@/features/manange/mutation/color';
 
 interface CellActionProps {

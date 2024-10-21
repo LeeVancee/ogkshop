@@ -16,7 +16,6 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { OrderColumn } from './columns';
-import ky from 'ky';
 import { useActionDeleteOrder } from '@/features/manange/mutation/order';
 
 interface CellActionProps {

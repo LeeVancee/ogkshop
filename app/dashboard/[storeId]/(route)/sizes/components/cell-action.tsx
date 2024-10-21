@@ -16,7 +16,6 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { SizeColumn } from './columns';
-import ky from 'ky';
 import { useActionDeleteSize } from '@/features/manange/mutation/size';
 
 interface CellActionProps {

@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { ProductColumn } from './columns';
-import ky from 'ky';
 import { useActionDeleteProduct } from '@/features/manange/mutation/product';
 
 interface CellActionProps {

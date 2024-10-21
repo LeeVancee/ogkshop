@@ -4,7 +4,6 @@ import Currency from '@/components/frontside/currency';
 import useCart from '@/hooks/use-cart';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
-import ky from 'ky';
 import { useCreateCheckoutSession } from '@/features/shop/api/use-checkout';
 
 const Summary = () => {

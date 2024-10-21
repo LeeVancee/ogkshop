@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { Button } from '@/components/ui/button';
-import ky from 'ky';
 import { useCreateStore } from '@/features/manange/mutation/store';
 
 const formSchema = z.object({

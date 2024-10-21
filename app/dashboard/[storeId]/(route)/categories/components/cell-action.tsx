@@ -16,7 +16,6 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { CategoryColumn } from './columns';
-import ky from 'ky';
 import { useActionDeleteCategory } from '@/features/manange/mutation/category';
 
 interface CellActionProps {

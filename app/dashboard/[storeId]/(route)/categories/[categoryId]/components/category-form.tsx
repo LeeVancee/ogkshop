@@ -14,7 +14,6 @@ import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ky from 'ky';
 import { Billboard, Category } from '@/types';
 import {
   useActionDeleteCategory,

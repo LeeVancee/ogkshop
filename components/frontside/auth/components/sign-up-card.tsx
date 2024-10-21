@@ -9,7 +9,6 @@ import { SignInFlow } from '../types';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
-import ky from 'ky';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRegister } from '@/features/auth/api/use-register';
 import { UserRole } from '@prisma/client';

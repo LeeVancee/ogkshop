@@ -15,7 +15,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
-import ky from 'ky';
 import { useCreateColor, useDeleteColor, useUpdateColor } from '@/features/manange/mutation/color';
 
 const formSchema = z.object({
