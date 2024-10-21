@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import ky from 'ky';
 import { useParams, useRouter } from 'next/navigation';
-
 import toast from 'react-hot-toast';
+import { createProduct, updateProduct, deleteProduct } from '../action/product';
 
 export const useCreateProduct = () => {
   const params = useParams();
@@ -10,16 +9,15 @@ export const useCreateProduct = () => {
   const router = useRouter();
   return useMutation({
     mutationFn: async (data: any) => {
-      const response = await ky.post(`/api/${params.storeId}/products`, { json: data });
-      return response.json();
+      return createProduct(params.storeId as string, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products', params.storeId] });
       toast.success('Product created.');
       router.push(`/dashboard/${params.storeId}/products`);
     },
-    onError: () => {
-      toast.error('Failed to create product');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to create product');
     },
   });
 };
@@ -30,16 +28,15 @@ export const useUpdateProduct = () => {
   const router = useRouter();
   return useMutation({
     mutationFn: async (data: any) => {
-      const response = await ky.patch(`/api/${params.storeId}/products/${params.productId}`, { json: data });
-      return response.json();
+      return updateProduct(params.productId as string, params.storeId as string, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products', params.storeId] });
       toast.success('Product updated.');
       router.push(`/dashboard/${params.storeId}/products`);
     },
-    onError: () => {
-      toast.error('Failed to update product');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update product');
     },
   });
 };
@@ -50,16 +47,15 @@ export const useDeleteProduct = () => {
   const router = useRouter();
   return useMutation({
     mutationFn: async () => {
-      const response = await ky.delete(`/api/${params.storeId}/products/${params.productId}`);
-      return response.json();
+      return deleteProduct(params.productId as string, params.storeId as string);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products', params.storeId] });
       toast.success('Product deleted.');
       router.push(`/dashboard/${params.storeId}/products`);
     },
-    onError: () => {
-      toast.error('Failed to delete product');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete product');
     },
   });
 };
@@ -67,19 +63,16 @@ export const useDeleteProduct = () => {
 export const useActionDeleteProduct = () => {
   const params = useParams();
   const queryClient = useQueryClient();
-  const router = useRouter();
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await ky.delete(`/api/${params.storeId}/products/${id}`);
-      return response.json();
+      return deleteProduct(id, params.storeId as string);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products', params.storeId] });
       toast.success('Product deleted.');
-      router.push(`/dashboard/${params.storeId}/products`);
     },
-    onError: () => {
-      toast.error('Failed to delete product');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete product');
     },
   });
 };

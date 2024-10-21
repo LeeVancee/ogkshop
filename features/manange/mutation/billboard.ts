@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import ky from 'ky';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { createBillboard, updateBillboard, deleteBillboard } from '../action/billboard';
 
 export const useCreateBillboard = () => {
   const params = useParams();
@@ -9,20 +9,16 @@ export const useCreateBillboard = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (data: any) => {
-      const response = await ky.post(`/api/${params.storeId}/billboards`, { json: data });
-      if (!response.ok) {
-        throw new Error('Failed to create billboard');
-      }
-      return response.json();
+    mutationFn: async (data: { label: string; imageUrl: string }) => {
+      return createBillboard(params.storeId as string, data);
     },
     onSuccess: () => {
       toast.success('Billboard created.');
       queryClient.invalidateQueries({ queryKey: ['billboards'] });
       router.push(`/dashboard/${params.storeId}/billboards`);
     },
-    onError: () => {
-      toast.error('Failed to create billboard');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to create billboard');
     },
   });
 };
@@ -31,21 +27,18 @@ export const useUpdateBillboard = () => {
   const params = useParams();
   const queryClient = useQueryClient();
   const router = useRouter();
+
   return useMutation({
-    mutationFn: async (data: any) => {
-      const response = await ky.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, { json: data });
-      if (!response.ok) {
-        throw new Error('Failed to update billboard');
-      }
-      return response.json();
+    mutationFn: async (data: { label: string; imageUrl: string }) => {
+      return updateBillboard(params.billboardId as string, params.storeId as string, data);
     },
     onSuccess: () => {
       toast.success('Billboard updated.');
       queryClient.invalidateQueries({ queryKey: ['billboards', params.storeId] });
       router.push(`/dashboard/${params.storeId}/billboards`);
     },
-    onError: () => {
-      toast.error('Failed to update billboard');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update billboard');
     },
   });
 };
@@ -57,19 +50,15 @@ export const useDeleteBillboard = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await ky.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
-      if (!response.ok) {
-        throw new Error('Failed to delete billboard');
-      }
-      return response.json();
+      return deleteBillboard(params.billboardId as string, params.storeId as string);
     },
     onSuccess: () => {
       toast.success('Billboard deleted.');
       queryClient.invalidateQueries({ queryKey: ['billboards'] });
       router.push(`/dashboard/${params.storeId}/billboards`);
     },
-    onError: () => {
-      toast.error('Failed to delete billboard');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete billboard');
     },
   });
 };
@@ -77,16 +66,17 @@ export const useDeleteBillboard = () => {
 export const useActionDeleteBillboard = () => {
   const params = useParams();
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (billboardId: string) => {
-      const response = await ky.delete(`/api/${params.storeId}/billboards/${billboardId}`);
-      if (!response.ok) {
-        throw new Error('Failed to delete billboard');
-      }
-      return response.json();
+      return deleteBillboard(billboardId, params.storeId as string);
     },
     onSuccess: () => {
+      toast.success('Billboard deleted.');
       queryClient.invalidateQueries({ queryKey: ['billboards'] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete billboard');
     },
   });
 };

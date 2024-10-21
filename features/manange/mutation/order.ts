@@ -1,22 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import ky from 'ky';
 import { useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { deleteOrder } from '../action/order';
 
 export const useActionDeleteOrder = () => {
   const params = useParams();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      const response = await ky.delete(`/api/${params.storeId}/orders/${params.orderId}`);
-      return response.json();
+      return deleteOrder(params.orderId as string);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders', params.storeId] });
       toast.success('Order deleted.');
     },
-    onError: () => {
-      toast.error('Failed to delete order');
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete order');
     },
   });
 };
