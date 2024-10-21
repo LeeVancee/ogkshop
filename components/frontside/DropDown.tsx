@@ -13,7 +13,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import { AuthDialog } from './auth-dialog';
 
 export function DropDown() {
   const { data: session, status } = useSession();
