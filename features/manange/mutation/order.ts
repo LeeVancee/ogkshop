@@ -7,8 +7,8 @@ export const useActionDeleteOrder = () => {
   const params = useParams();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => {
-      return deleteOrder(params.orderId as string);
+    mutationFn: async (orderId: string) => {
+      return deleteOrder(orderId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders', params.storeId] });

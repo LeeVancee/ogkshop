@@ -5,6 +5,7 @@ import useCart from '@/hooks/use-cart';
 import { toast } from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import ky from 'ky';
+import { useCreateCheckoutSession } from '@/features/shop/api/use-checkout';
 
 const Summary = () => {
   const items = useCart((state) => state.items);
@@ -15,31 +16,21 @@ const Summary = () => {
     return total + Number(item.price) * item.quantity;
   }, 0);
 
+  const { mutate: createCheckoutSession } = useCreateCheckoutSession();
+
   const onCheckout = async () => {
     if (!user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }
 
-    try {
-      const response: any = await ky
-        .post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
-          json: {
-            productIds: items.map((item) => item.id),
-            quantities: items.map((item) => item.quantity),
-            sizeIds: items.map((item) => item.selectedSize?.id),
-            colorIds: items.map((item) => item.selectedColor?.id),
-          },
-          headers: {
-            Authorization: `Bearer ${user.id}`,
-          },
-        })
-        .json(); // 自动解析 JSON 响应
-
-      window.location.href = response.url;
-    } catch (error) {
-      toast.error('Checkout failed. Please try again.');
-    }
+    createCheckoutSession({
+      storeId: process.env.NEXT_PUBLIC_STORE_ID!,
+      productIds: items.map((item) => item.id),
+      quantities: items.map((item) => item.quantity),
+      sizeIds: items.map((item) => item.selectedSize?.id || ''),
+      colorIds: items.map((item) => item.selectedColor?.id || ''),
+    });
   };
 
   return (

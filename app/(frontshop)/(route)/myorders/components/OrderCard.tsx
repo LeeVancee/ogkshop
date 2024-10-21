@@ -11,6 +11,8 @@ import { AlertModal } from '@/components/frontside/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useCreateOrderPaySession } from '@/features/shop/api/use-checkout';
+import { useDeleteMyOrders } from '@/features/shop/api/use-delete-myorders';
 
 interface OrderCardProps {
   id: string;
@@ -24,57 +26,37 @@ interface OrderCardProps {
 }
 interface OrderProps {
   order: OrderCardProps;
-  onDeleteSuccess: (orderId: string) => void;
 }
 
-export default function OrderCard({ order, onDeleteSuccess }: OrderProps) {
+export default function OrderCard({ order }: OrderProps) {
   const session = useSession();
   const router = useRouter();
   const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
   const user = session.data?.user;
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { mutate: createOrderPaySession, isPending: isCreatingOrderPaySessionPending } = useCreateOrderPaySession();
+  const { mutate: deleteOrder, isPending: isDeletingOrderPending } = useDeleteMyOrders();
+  const isPending = isCreatingOrderPaySessionPending || isDeletingOrderPending;
 
   const handlePay = async () => {
     if (!user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }
-    setLoading(true);
-    try {
-      const response: any = await ky
-        .post(`${process.env.NEXT_PUBLIC_API_URL}/orderpay`, {
-          json: { orderId: id },
-          headers: { Authorization: `Bearer ${user.id}` },
-        })
-        .json();
-      router.push(response.url);
-    } catch (error) {
-      toast.error('Payment initiation failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    createOrderPaySession({ storeId: process.env.NEXT_PUBLIC_STORE_ID!, orderId: id });
   };
 
   const onDelete = async () => {
-    setLoading(true);
-    try {
-      await ky.delete(`${process.env.NEXT_PUBLIC_API_URL}/deleteorder`, {
-        json: { orderId: id },
-      });
-      toast.success('Order deleted.');
-      onDeleteSuccess(id); // 调用传入的回调函数，更新父组件中的订单列表
-    } catch (error) {
-      toast.error('Failed to delete order. Please try again.');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    deleteOrder(id, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
       <Card className="w-full max-w-3xl mx-auto mt-4 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-grow p-4">
@@ -139,16 +121,16 @@ export default function OrderCard({ order, onDeleteSuccess }: OrderProps) {
                     variant="outline"
                     size="sm"
                     onClick={handlePay}
-                    disabled={loading}
+                    disabled={isPending}
                     className="text-xs py-1 px-2"
                   >
-                    {loading ? 'Processing...' : 'Pay Now'}
+                    {isPending ? 'Processing...' : 'Pay Now'}
                   </Button>
                   <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => setOpen(true)}
-                    disabled={loading}
+                    disabled={isPending}
                     className="text-xs py-1 px-2"
                   >
                     Delete Order
@@ -158,8 +140,8 @@ export default function OrderCard({ order, onDeleteSuccess }: OrderProps) {
             </CardFooter>
           </div>
           <div className="flex justify-center items-center sm:w-1/3">
-            <div className="w-64 h-64 p-2">
-              <Image src={image} alt="Product image" width={256} height={256} className="object-cover rounded-md" />
+            <div className="w-64 h-64 p-2 relative mr-4">
+              <Image src={image} alt="Product image" fill className="object-cover rounded-md" />
             </div>
           </div>
         </div>

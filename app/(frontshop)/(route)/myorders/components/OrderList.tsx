@@ -1,19 +1,17 @@
 'use client';
-import { OrderColumn } from '@/types';
-import React, { useEffect, useState } from 'react';
-import OrderCard from './OrderCard';
-import useCart from '@/hooks/use-cart';
+
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
+import OrderCard from './OrderCard';
+import useCart from '@/hooks/use-cart';
+import { useGetMyOrders } from '@/features/shop/api/use-get-myorders';
+import HomeLoader from '@/components/loader/home-loader';
 
-interface OrderListProps {
-  initialOrders: OrderColumn[];
-}
-
-export default function OrderList({ initialOrders }: OrderListProps) {
-  const [orders, setOrders] = useState<OrderColumn[]>(initialOrders);
+export default function OrderList() {
   const removeAll = useCart((state) => state.removeAll);
   const searchParams = useSearchParams();
+  const { data: orders, isLoading, isError } = useGetMyOrders();
 
   useEffect(() => {
     if (searchParams.get('success')) {
@@ -26,19 +24,20 @@ export default function OrderList({ initialOrders }: OrderListProps) {
     }
   }, [searchParams, removeAll]);
 
-  const handleDeleteOrder = (orderId: string) => {
-    setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
-  };
+  if (isLoading) {
+    return <HomeLoader />;
+  }
+  if (orders && orders.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full pt-20">
+        <p className="text-xl">No Orders!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-y-4 p-6">
-      {orders.length > 0 ? (
-        orders.map((order) => <OrderCard key={order.id} order={order} onDeleteSuccess={handleDeleteOrder} />)
-      ) : (
-        <div className="flex justify-center items-center h-full pt-20">
-          <p className="text-xl">No Orders!</p>
-        </div>
-      )}
+      {orders && orders.map((order) => <OrderCard key={order.id} order={order} />)}
     </div>
   );
 }

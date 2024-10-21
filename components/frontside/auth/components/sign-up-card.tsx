@@ -11,6 +11,8 @@ import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import ky from 'ky';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useRegister } from '@/features/auth/api/use-register';
+import { UserRole } from '@prisma/client';
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
@@ -18,7 +20,7 @@ interface SignUpCardProps {
 
 export default function SignUpCard({ setState }: SignUpCardProps) {
   const [pending, setPending] = useState(false);
-  const [role, setRole] = useState('USER'); // 设置默认角色为 USER
+  const [role, setRole] = useState<UserRole>('USER'); // 设置默认角色为 USER
 
   const handleProviderSignUp = (value: 'github' | 'google') => {
     setPending(true);
@@ -39,25 +41,20 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
     },
   });
 
+  const { mutate: registerMutation } = useRegister();
+
   const onSignUpSubmit: SubmitHandler<FieldValues> = async (data) => {
     setPending(true);
 
     // 添加 role 字段到数据中
-    const submitData = { ...data, role };
+    const submitData = {
+      email: data.email,
+      name: data.name,
+      password: data.password,
+      role,
+    };
 
-    try {
-      await ky.post(`/api/user/register`, { json: submitData });
-      toast.success('Successfully created account! redirecting to login...');
-      setState('signIn');
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        toast.error('Email already registered');
-      } else {
-        toast.error('Something went wrong!');
-      }
-    } finally {
-      setPending(false);
-    }
+    registerMutation(submitData);
   };
 
   return (
@@ -73,7 +70,7 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
           <Input disabled={pending} placeholder="Full name" type="text" {...registerSignUp('name')} />
           <Input disabled={pending} placeholder="Email" type="email" {...registerSignUp('email')} />
           <Input disabled={pending} placeholder="Password" type="password" {...registerSignUp('password')} />
-          <Select onValueChange={(value) => setRole(value)}>
+          <Select onValueChange={(value) => setRole(value as UserRole)}>
             <SelectTrigger id="role" aria-label="Role">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>

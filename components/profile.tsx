@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,8 +8,8 @@ import { signOut, useSession } from 'next-auth/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import ky from 'ky';
+
+import { useUpdateProfile } from '@/features/auth/api/use-update-profile';
 
 const ProfileSchema = z
   .object({
@@ -29,7 +28,6 @@ type ProfileFormValues = z.infer<typeof ProfileSchema>;
 export default function Profile() {
   const { data: session } = useSession();
   const user = session?.user;
-  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -41,22 +39,15 @@ export default function Profile() {
       name: session?.user.name,
     },
   });
+  const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const onSubmit = async (data: ProfileFormValues) => {
-    setLoading(true);
-    try {
-      await ky.post(`/api/user/profile`, { json: data });
-      toast.success('Profile updated successfully, Please re-login...');
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        toast.error('Invalid credentials');
-      }
-    } finally {
-      setLoading(false);
-      setTimeout(() => {
-        signOut({ callbackUrl: '/' });
-      }, 1000);
-    }
+    const updateData = {
+      name: data.name,
+      currentPassword: data.currentPassword || '', // Provide an empty string if undefined
+      newPassword: data.newPassword || '',
+    };
+    updateProfile(updateData);
   };
 
   if (!session) {
@@ -93,13 +84,20 @@ export default function Profile() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   <div>
                     <Label htmlFor="new-username">New Username</Label>
-                    <Input id="new-username" value={user.name} {...register('name')} placeholder="Enter new username" />
+                    <Input
+                      id="new-username"
+                      disabled={isPending}
+                      value={user.name}
+                      {...register('name')}
+                      placeholder="Enter new username"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="current-password">Current Password</Label>
                     <Input
                       id="current-password"
                       type="password"
+                      disabled={isPending}
                       {...register('currentPassword')}
                       placeholder="Enter current password"
                     />
@@ -109,6 +107,7 @@ export default function Profile() {
                     <Input
                       id="new-password"
                       type="password"
+                      disabled={isPending}
                       {...register('newPassword')}
                       placeholder="Enter new password"
                     />
@@ -118,11 +117,14 @@ export default function Profile() {
                     <Input
                       id="confirm-password"
                       type="password"
+                      disabled={isPending}
                       {...register('confirmPassword')}
                       placeholder="Confirm new password"
                     />
                   </div>
-                  <Button type="submit">Save</Button>
+                  <Button type="submit" disabled={isPending}>
+                    {isPending ? 'Saving...' : 'Save'}
+                  </Button>
                 </form>
               </div>
             </TabsContent>

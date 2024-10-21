@@ -1,8 +1,16 @@
 'use server';
 
 import prismadb from '@/lib/prismadb';
+import { auth } from '@/auth';
 
 export async function deleteOrder(orderId: string) {
+  const session = await auth();
+  const userId = session?.user.id;
+
+  if (!userId) {
+    throw new Error('Unauthenticated');
+  }
+
   if (!orderId) {
     throw new Error('Order id is required');
   }
