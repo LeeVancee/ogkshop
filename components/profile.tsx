@@ -36,7 +36,7 @@ export default function Profile() {
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      name: session?.user.name,
+      name: session?.user.name || '',
     },
   });
   const { mutate: updateProfile, isPending } = useUpdateProfile();
@@ -87,7 +87,6 @@ export default function Profile() {
                     <Input
                       id="new-username"
                       disabled={isPending}
-                      value={user.name}
                       {...register('name')}
                       placeholder="Enter new username"
                     />

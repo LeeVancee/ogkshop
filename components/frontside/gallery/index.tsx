@@ -27,16 +27,9 @@ const Gallery = ({ images = [] }: GalleryProps) => {
       <TabPanels className="aspect-square w-full">
         {images.map((image) => (
           <TabPanel key={image.id}>
-            <div className="aspect-square relative sm:rounded-lg ">
+            <div className="aspect-square relative sm:rounded-lg overflow-hidden">
               <Zoom>
-                <NextImage
-                  width={592}
-                  height={592}
-                  src={image.url}
-                  alt="Image"
-                  priority
-                  className="object-cover object-center"
-                />
+                <NextImage fill src={image.url} alt="Image" priority className="object-cover" />
               </Zoom>
             </div>
           </TabPanel>

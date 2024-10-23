@@ -16,6 +16,7 @@ import { Product } from '@/types';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { useGetProducts } from '@/features/shop/api/use-get-products';
+import { DialogTitle } from '@/components/ui/dialog';
 
 interface SearchModalProps {
   products: Product[];
@@ -61,6 +62,7 @@ export function SearchModal() {
         <Search className="h-4 w-4" />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
+        <DialogTitle />
         <Command className="rounded-lg border shadow-md">
           <CommandInput
             placeholder="Search Product..."

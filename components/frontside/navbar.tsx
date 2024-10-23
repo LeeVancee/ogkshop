@@ -11,7 +11,7 @@ import { SearchModal } from './modal/search-modal';
 const Navbar = async () => {
   return (
     <header className="sticky inset-0 z-10 border-b bg-background/90 backdrop-blur-md">
-      <nav className="px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
+      <nav className="px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between max-w-7xl mx-auto">
         <div className="flex items-center">
           <Link href="/" className="mr-4 flex lg:mr-0 gap-x-2">
             <p className="font-bold text-xl">OGKSHOP</p>
