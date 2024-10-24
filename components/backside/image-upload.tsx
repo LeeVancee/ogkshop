@@ -4,6 +4,7 @@ import { CldUploadWidget } from 'next-cloudinary';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -16,6 +17,16 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
   const onUpload = (result: any) => {
     onChange(result.info.secure_url);
   };
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div>
@@ -31,7 +42,7 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
           </div>
         ))}
       </div>
-      <CldUploadWidget onUpload={onUpload} uploadPreset="br3zkub1">
+      <CldUploadWidget onSuccess={onUpload} uploadPreset="br3zkub1">
         {({ open }) => {
           const onClick = () => {
             open();

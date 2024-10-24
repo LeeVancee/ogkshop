@@ -108,8 +108,8 @@ importers:
         specifier: 5.0.0-beta.18
         version: 5.0.0-beta.18(next@15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
       next-cloudinary:
-        specifier: 6.6.2
-        version: 6.6.2(next@15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
+        specifier: ^6.16.0
+        version: 6.16.0(next@15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
@@ -271,17 +271,17 @@ packages:
     resolution: {integrity: sha512-OwS2CM5KocvQ/k7dFJa8i5bNGJP0hXWfVCfDkqRFP1IreH1JDC7wG6eCYCi0+McbfT8OR/kNqsI0UU0xP9H6PQ==}
     engines: {node: '>=6.9.0'}
 
-  '@cloudinary-util/types@1.0.5':
-    resolution: {integrity: sha512-QySi6Q138yg/qrD7f6yscH9T+/8VwUfF9AiwFPMS89uI5wnSG9nhC+93a/8iUpgk9ujTDVqE8+TqYAbxvF0BMA==}
+  '@cloudinary-util/types@1.5.10':
+    resolution: {integrity: sha512-n5lrm7SdAXhgWEbkSJKHZGnaoO9G/g4WYS6HYnq/k4nLj79sYfQZOoKjyR8hF2iyLRdLkT+qlk68RNFFv5tKew==}
 
-  '@cloudinary-util/url-loader@5.3.1':
-    resolution: {integrity: sha512-cYgnazu7cLjRaajGmhyVfMxjrOz4EaSQsWK1/utV4K5kknUUhu8vUovGunDQJbEGmBWB/TUt7zmwpdUAQ+pe4g==}
-
-  '@cloudinary-util/util@3.0.2':
-    resolution: {integrity: sha512-EMmspJLVFn9hX92DaK/yuSzSUXF/BJ88crzN8vT1qCaJMMWKapGNo2HZ6YNgG69PP/Jngdk0mTINDU+GP3A1CA==}
+  '@cloudinary-util/url-loader@5.10.4':
+    resolution: {integrity: sha512-gHkdvOaV+rlcwuIT7Vqd0ts/H5bsH4+bwFten/gIZ8oRjzdTBvgIY3R6F8bbJt0pFIEfpFEQLe4rPkl0NNqEWg==}
 
   '@cloudinary-util/util@3.3.2':
     resolution: {integrity: sha512-Cc0iFxzfl7fcOXuznpeZFGYC885Of/vDgccRDnhTe/8Rf8YKv2PjLtezyo0VgmdA/CpeZy29NCXAsf6liokbwg==}
+
+  '@cloudinary-util/util@4.0.0':
+    resolution: {integrity: sha512-S4xcou/3A7l5o+bcKlw2VHBNgwups7/0lbVDT/cO5YmtrcEYXgj6LGmwnjvpTm/x571VPVN8x5jWdT3rLZiKJQ==}
 
   '@cloudinary/transformation-builder-sdk@1.15.2':
     resolution: {integrity: sha512-oXYaW/whGaQVlR1O/ocp7vYcxaMAy3uGcQ8+8xjbfDCy/+c+zFIuP6JKI8L05kzqw7Wjh0cqzG+4u0X1UpPh+A==}
@@ -1290,9 +1290,6 @@ packages:
 
   '@tanstack/virtual-core@3.10.8':
     resolution: {integrity: sha512-PBu00mtt95jbKFi6Llk9aik8bnR3tR/oQP1o3TSi+iG//+Q2RTIzCEgKkHG8BB86kxMNW6O8wku+Lmi+QFR6jA==}
-
-  '@tsconfig/recommended@1.0.7':
-    resolution: {integrity: sha512-xiNMgCuoy4mCL4JTywk9XFs5xpRUcKxtWEcMR6FNMtsgewYTIgIR+nvlP4A4iRCAzRsHMnPhvTRrzp4AGcRTEA==}
 
   '@types/bcryptjs@2.4.6':
     resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
@@ -2350,11 +2347,11 @@ packages:
       nodemailer:
         optional: true
 
-  next-cloudinary@6.6.2:
-    resolution: {integrity: sha512-MbI5WpSk4dj9YnRgDp1C7vjtMivqOdkoR/jcmjIGR2Zth5RqGgiTpi7ee87d9pEdrfuJxdDzv27KA4s8tAVQkQ==}
+  next-cloudinary@6.16.0:
+    resolution: {integrity: sha512-gbw/A1aBHJBC2thm4/veI77IkmbAQXuRUj8kNEuxf1zgjGkUWkShho/cXS4VsFhnHuDieqb30gMjZnZdBDrQ/Q==}
     peerDependencies:
-      next: ^12 || ^13 || ^14
-      react: ^17 || ^18
+      next: ^12 || ^13 || ^14 || >=15.0.0-rc || ^15
+      react: ^17 || ^18 || >=19.0.0-beta || ^19
 
   next-themes@0.3.0:
     resolution: {integrity: sha512-/QHIrsYpd6Kfk7xakK4svpDI5mmXP0gfvCoJdGpZQ2TOrQZmsW0QxjaiLn8wbIKjtm4BTSqLoix4lxYYOnLJ/w==}
@@ -3160,18 +3157,18 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
-  '@cloudinary-util/types@1.0.5': {}
+  '@cloudinary-util/types@1.5.10': {}
 
-  '@cloudinary-util/url-loader@5.3.1':
+  '@cloudinary-util/url-loader@5.10.4':
     dependencies:
-      '@cloudinary-util/types': 1.0.5
-      '@cloudinary-util/util': 3.0.2
+      '@cloudinary-util/types': 1.5.10
+      '@cloudinary-util/util': 3.3.2
       '@cloudinary/url-gen': 1.15.0
       zod: 3.23.8
 
-  '@cloudinary-util/util@3.0.2': {}
-
   '@cloudinary-util/util@3.3.2': {}
+
+  '@cloudinary-util/util@4.0.0': {}
 
   '@cloudinary/transformation-builder-sdk@1.15.2':
     dependencies:
@@ -4141,8 +4138,6 @@ snapshots:
   '@tanstack/table-core@8.20.5': {}
 
   '@tanstack/virtual-core@3.10.8': {}
-
-  '@tsconfig/recommended@1.0.7': {}
 
   '@types/bcryptjs@2.4.6': {}
 
@@ -5332,12 +5327,11 @@ snapshots:
       next: 15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
       react: 19.0.0-rc-65a56d0e-20241020
 
-  next-cloudinary@6.6.2(next@15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020):
+  next-cloudinary@6.16.0(next@15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020):
     dependencies:
-      '@cloudinary-util/types': 1.0.5
-      '@cloudinary-util/url-loader': 5.3.1
-      '@cloudinary-util/util': 3.3.2
-      '@tsconfig/recommended': 1.0.7
+      '@cloudinary-util/types': 1.5.10
+      '@cloudinary-util/url-loader': 5.10.4
+      '@cloudinary-util/util': 4.0.0
       next: 15.0.0(babel-plugin-react-compiler@19.0.0-beta-8a03594-20241020)(react-dom@19.0.0-rc-65a56d0e-20241020(react@19.0.0-rc-65a56d0e-20241020))(react@19.0.0-rc-65a56d0e-20241020)
       react: 19.0.0-rc-65a56d0e-20241020
 
