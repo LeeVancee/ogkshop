@@ -21,14 +21,14 @@ export default function ProductList({ categoryName, colorName, sizeName }: Produ
     return <ProductListLoader />;
   }
 
-  if (!products) {
+  if (products?.length === 0) {
     return <div className="flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
   }
 
   return (
     <div className="mt-6 lg:col-span-4 lg:mt-0">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {products.map((item) => (
+        {products?.map((item) => (
           <ProductCard key={item.id} data={item} />
         ))}
       </div>
