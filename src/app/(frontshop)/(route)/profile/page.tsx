@@ -1,4 +1,4 @@
-import Profile from '@/components/profile';
+import Profile from '@/components/profile/profile';
 import Container from '@/components/ui/container';
 import React from 'react';
 

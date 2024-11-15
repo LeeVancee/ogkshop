@@ -10,15 +10,42 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { signOut, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import { useEffect, useState } from 'react';
 
 export function DropDown() {
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
-  if (status === 'unauthenticated') {
+  const { data: session, isPending, error } = authClient.useSession();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const handleLogout = () => {
+    authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push('/');
+        },
+      },
+    });
+  };
+
+  if (isPending) {
+    return (
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback />
+        </Avatar>
+      </Button>
+    );
+  }
+
+  if (!session) {
     return (
       <Button variant="ghost" onClick={() => router.push('/auth')}>
         login
@@ -43,7 +70,7 @@ export function DropDown() {
             <p className="text-xs leading-none text-muted-foreground">{session?.user?.email}</p>
           </div>
         </DropdownMenuLabel>
-        {session?.user?.role === 'ADMIN' && (
+        {session?.user?.role === 'admin' && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push('/dashboard')}>
@@ -63,7 +90,7 @@ export function DropDown() {
           Profile
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

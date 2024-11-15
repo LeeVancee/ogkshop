@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 
 export async function getColor(colorId: string) {
@@ -19,7 +19,7 @@ export async function getColor(colorId: string) {
 }
 
 export async function createColor(storeId: string, data: { name: string; value: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -60,7 +60,7 @@ export async function createColor(storeId: string, data: { name: string; value: 
 }
 
 export async function updateColor(colorId: string, storeId: string, data: { name: string; value: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -107,7 +107,7 @@ export async function updateColor(colorId: string, storeId: string, data: { name
 }
 
 export async function deleteColor(colorId: string, storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

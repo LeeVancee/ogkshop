@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 
 export async function getSize(sizeId: string) {
@@ -19,7 +19,7 @@ export async function getSize(sizeId: string) {
 }
 
 export async function createSize(storeId: string, data: { name: string; value: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -60,7 +60,7 @@ export async function createSize(storeId: string, data: { name: string; value: s
 }
 
 export async function updateSize(sizeId: string, storeId: string, data: { name: string; value: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -107,7 +107,7 @@ export async function updateSize(sizeId: string, storeId: string, data: { name: 
 }
 
 export async function deleteSize(sizeId: string, storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

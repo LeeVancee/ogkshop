@@ -12,13 +12,14 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return;
-    if (store) {
-      router.push(`/dashboard/${store.id}`);
-    } else if (!isOpen) {
-      onOpen();
+    if (!isLoading) {
+      if (!store) {
+        onOpen();
+      } else {
+        router.push(`/dashboard/${store.id}`);
+      }
     }
-  }, [store, onOpen, router, isLoading, isOpen]);
+  }, [isLoading, store, router, onOpen]);
 
   return (
     <div className="flex items-center justify-center h-screen">

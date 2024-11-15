@@ -11,12 +11,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { signOut, useSession } from 'next-auth/react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
 
 export function DropDown() {
-  const { data: session } = useSession();
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+  } = authClient.useSession();
+
+  console.log(222);
 
   if (session) {
     return (
@@ -42,7 +48,7 @@ export function DropDown() {
             <Link href="/"> back to store</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}>
+          <DropdownMenuItem onClick={() => {}}>
             <LogOut className="mr-2 h-4 w-4" />
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

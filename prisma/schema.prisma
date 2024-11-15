@@ -7,20 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  USER
-  ADMIN
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  Account       Account[]
+  Session       Session[]
+
+  role       String?
+  banned     Boolean?
+  banReason  String?
+  banExpires DateTime?
+  Order      Order[]   @relation("UserToOrder")
+
+  @@unique([email])
+  @@map("user")
 }
 
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String?
-  roles     UserRole @default(USER)
-  orders    Order[]  @relation("UserToOrder")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@map("session")
+}
+
+model Account {
+  id           String    @id
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verification")
 }
 
 model Store {
@@ -35,6 +77,8 @@ model Store {
   orders     Order[]     @relation("StoreToOrder")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+
+  @@map("store")
 }
 
 model Billboard {
@@ -48,6 +92,7 @@ model Billboard {
   updatedAt  DateTime   @updatedAt
 
   @@index([storeId])
+  @@map("billboard")
 }
 
 model Category {
@@ -63,6 +108,7 @@ model Category {
 
   @@index([storeId])
   @@index([billboardId])
+  @@map("category")
 }
 
 model Product {
@@ -87,6 +133,7 @@ model Product {
 
   @@index([storeId])
   @@index([categoryId])
+  @@map("product")
 }
 
 model Order {
@@ -104,6 +151,7 @@ model Order {
 
   @@index([storeId])
   @@index([userId])
+  @@map("order")
 }
 
 model OrderItem {
@@ -122,6 +170,7 @@ model OrderItem {
   @@index([productId])
   @@index([sizeId])
   @@index([colorId])
+  @@map("order_item")
 }
 
 model Size {
@@ -136,6 +185,7 @@ model Size {
   updatedAt  DateTime    @updatedAt
 
   @@index([storeId])
+  @@map("size")
 }
 
 model Color {
@@ -151,6 +201,7 @@ model Color {
   orderItems OrderItem[]
 
   @@index([storeId])
+  @@map("color")
 }
 
 model Image {
@@ -162,4 +213,5 @@ model Image {
   updatedAt DateTime @updatedAt
 
   @@index([productId])
+  @@map("image")
 }

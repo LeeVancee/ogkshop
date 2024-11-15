@@ -7,9 +7,9 @@ import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { SignInFlow } from '../types';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void;
@@ -31,23 +31,27 @@ export default function SignInCard({ setState }: SignInCardProps) {
     },
   });
   const onLoginSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setPending(true);
-    await signIn('credentials', { ...data, redirect: false })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error('Invalid credentials');
-        }
-        if (callback?.ok && !callback?.error) {
-          toast.success('Successfully logged in!');
+    await authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onRequest: () => {
+          setPending(true);
+        },
+        onSuccess: () => {
+          setPending(false);
+          toast.success('Successfully signed in!');
           router.push('/');
-        }
-      })
-      .catch((error) => {
-        toast.error('Something went wrong!');
-      })
-      .finally(() => {
-        setPending(false);
-      });
+        },
+        onError: (ctx) => {
+          setPending(false);
+          setError(ctx.error.message || 'Failed to sign in');
+          toast.error(ctx.error.message || 'Failed to sign in');
+        },
+      }
+    );
   };
 
   return (

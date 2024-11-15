@@ -12,7 +12,7 @@ import {
 } from './type';
 import { Billboard, Category } from '@/types';
 import { formatter } from '@/lib/utils';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import { redirect } from 'next/navigation';
 
 export const getBillboard = async (billboardId: string) => {
@@ -201,7 +201,7 @@ export const getOrders = async (storeId: string) => {
 };
 
 export const getSettings = async (storeId: string) => {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
   const store = await prismadb.store.findUnique({
     where: { id: storeId, adminId: userId },
@@ -213,14 +213,14 @@ export const getSettings = async (storeId: string) => {
 };
 
 export const getStore = async () => {
-  const session = await auth();
+  const session = await getSession();
   const adminId = session?.user.id;
 
   // 检查用户是否已登录，以及是否是 admin 用户
   const user = await prismadb.user.findUnique({
     where: {
       id: adminId,
-      roles: 'ADMIN',
+      role: 'admin',
     },
   });
 
@@ -238,14 +238,14 @@ export const getStore = async () => {
 };
 
 export const getStores = async () => {
-  const session = await auth();
+  const session = await getSession();
   const adminId = session?.user.id;
 
   // 检查用户是否已登录，以及是否是 admin 用户
   const user = await prismadb.user.findUnique({
     where: {
       id: adminId,
-      roles: 'ADMIN',
+      role: 'admin',
     },
   });
 

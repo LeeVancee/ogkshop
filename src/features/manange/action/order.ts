@@ -1,10 +1,10 @@
 'use server';
 
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 
 export async function deleteOrder(orderId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

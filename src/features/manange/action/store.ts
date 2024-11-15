@@ -1,10 +1,10 @@
 'use server';
 
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 
 export async function createStore(data: { name: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -26,7 +26,7 @@ export async function createStore(data: { name: string }) {
 }
 
 export async function updateStore(storeId: string, data: { name: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -55,7 +55,7 @@ export async function updateStore(storeId: string, data: { name: string }) {
 }
 
 export async function deleteStore(storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

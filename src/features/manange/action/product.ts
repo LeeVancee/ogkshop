@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 
 export async function getProduct(productId: string) {
@@ -24,7 +24,7 @@ export async function getProduct(productId: string) {
 }
 
 export async function createProduct(storeId: string, data: any) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -99,7 +99,7 @@ export async function createProduct(storeId: string, data: any) {
 }
 
 export async function updateProduct(productId: string, storeId: string, data: any) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -199,7 +199,7 @@ export async function updateProduct(productId: string, storeId: string, data: an
 }
 
 export async function deleteProduct(productId: string, storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

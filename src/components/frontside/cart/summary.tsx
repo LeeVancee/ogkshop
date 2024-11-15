@@ -3,13 +3,16 @@ import { Button } from '@/components/ui/button';
 import Currency from '@/components/frontside/currency';
 import useCart from '@/hooks/use-cart';
 import { toast } from 'react-hot-toast';
-import { useSession } from 'next-auth/react';
 import { useCreateCheckoutSession } from '@/features/shop/api/use-checkout';
+import { authClient } from '@/lib/auth-client';
 
 const Summary = () => {
   const items = useCart((state) => state.items);
-  const session = useSession();
-  const user = session.data?.user;
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+  } = authClient.useSession();
 
   const totalPrice = items.reduce((total, item) => {
     return total + Number(item.price) * item.quantity;
@@ -18,7 +21,7 @@ const Summary = () => {
   const { mutate: createCheckoutSession } = useCreateCheckoutSession();
 
   const onCheckout = async () => {
-    if (!user) {
+    if (!session.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }

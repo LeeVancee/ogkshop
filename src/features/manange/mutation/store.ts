@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { createStore, updateStore, deleteStore } from '../action/store';
+import { useStoreModal } from '@/hooks/use-store-modal';
 
 export const useCreateStore = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { onClose } = useStoreModal();
   return useMutation({
     mutationFn: async (data: { name: string }) => {
       return createStore(data);
@@ -13,6 +15,7 @@ export const useCreateStore = () => {
     onSuccess: (data: any) => {
       toast.success('Store created successfully');
       queryClient.invalidateQueries({ queryKey: ['stores'] });
+      onClose();
       router.push(`/dashboard/${data.id}`);
     },
     onError: (error: Error) => {

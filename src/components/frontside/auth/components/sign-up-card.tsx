@@ -7,11 +7,11 @@ import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { SignInFlow } from '../types';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
-import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useRegister } from '@/features/auth/api/use-register';
-import { UserRole } from '@prisma/client';
+
+import { authClient } from '@/lib/auth-client';
+import { setUserRole } from '@/features/auth/action';
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
@@ -19,14 +19,7 @@ interface SignUpCardProps {
 
 export default function SignUpCard({ setState }: SignUpCardProps) {
   const [pending, setPending] = useState(false);
-  const [role, setRole] = useState<UserRole>('USER'); // 设置默认角色为 USER
-
-  const handleProviderSignUp = (value: 'github' | 'google') => {
-    setPending(true);
-    signIn(value).finally(() => {
-      setPending(false);
-    });
-  };
+  const [role, setRole] = useState('user'); // 设置默认角色为 USER
 
   const {
     register: registerSignUp,
@@ -40,20 +33,36 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
     },
   });
 
-  const { mutate: registerMutation } = useRegister();
-
   const onSignUpSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setPending(true);
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+      },
+      {
+        onRequest: () => {
+          setPending(true);
+        },
+        onSuccess: () => {
+          setPending(false);
+          setUserRole(data.email, role);
+          toast.success('Successfully signed up!');
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || 'Failed to sign up');
+        },
+      }
+    );
 
-    // 添加 role 字段到数据中
-    const submitData = {
-      email: data.email,
-      name: data.name,
-      password: data.password,
-      role,
-    };
+    // const submitData = {
+    //   email: data.email,
+    //   name: data.name,
+    //   password: data.password,
+    //   role,
+    // };
 
-    registerMutation(submitData);
+    // registerMutation(submitData);
   };
 
   return (
@@ -69,13 +78,13 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
           <Input disabled={pending} placeholder="Full name" type="text" {...registerSignUp('name')} />
           <Input disabled={pending} placeholder="Email" type="email" {...registerSignUp('email')} />
           <Input disabled={pending} placeholder="Password" type="password" {...registerSignUp('password')} />
-          <Select onValueChange={(value) => setRole(value as UserRole)}>
+          <Select onValueChange={(value) => setRole(value)}>
             <SelectTrigger id="role" aria-label="Role">
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="USER">User</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
+              <SelectItem value="user">User</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
             </SelectContent>
           </Select>
 
@@ -87,23 +96,11 @@ export default function SignUpCard({ setState }: SignUpCardProps) {
         <Separator />
 
         <div className="flex flex-col gap-y-2.5">
-          <Button
-            disabled={pending}
-            onClick={() => handleProviderSignUp('google')}
-            variant="outline"
-            size="lg"
-            className="w-full relative"
-          >
+          <Button disabled={pending} onClick={() => {}} variant="outline" size="lg" className="w-full relative">
             <FcGoogle className="size-5 absolute top-3 left-2.5" />
             Continue with google
           </Button>
-          <Button
-            disabled={pending}
-            onClick={() => handleProviderSignUp('github')}
-            variant="outline"
-            size="lg"
-            className="w-full relative"
-          >
+          <Button disabled={pending} onClick={() => {}} variant="outline" size="lg" className="w-full relative">
             <FaGithub className="size-5 absolute top-3 left-2.5" />
             Continue with github
           </Button>

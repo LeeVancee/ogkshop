@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 
 export async function getBillboard(billboardId: string) {
@@ -18,7 +18,7 @@ export async function getBillboard(billboardId: string) {
 }
 
 export async function createBillboard(storeId: string, data: { label: string; imageUrl: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -58,7 +58,7 @@ export async function createBillboard(storeId: string, data: { label: string; im
 }
 
 export async function deleteBillboard(billboardId: string, storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -90,7 +90,7 @@ export async function deleteBillboard(billboardId: string, storeId: string) {
 }
 
 export async function updateBillboard(billboardId: string, storeId: string, data: { label: string; imageUrl: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

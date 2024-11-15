@@ -1,5 +1,5 @@
 'use server';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 import { formatter } from '@/lib/utils';
 import { Billboard, Category, Color, Size, Product, OrderColumn } from '@/types';
@@ -309,14 +309,14 @@ export const getTotalRevenue = async (storeId: string) => {
 };
 
 export const getStore = async () => {
-  const session = await auth();
+  const session = await getSession();
   const adminId = session?.user.id;
 
   // 检查用户是否已登录，以及是否是 admin 用户
   const user = await prismadb.user.findUnique({
     where: {
       id: adminId,
-      roles: 'ADMIN',
+      role: 'admin',
     },
   });
 
@@ -334,7 +334,7 @@ export const getStore = async () => {
 };
 
 export const getMyOrders = async () => {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -382,7 +382,7 @@ export const getMyOrders = async () => {
 };
 
 export async function deleteMyOrder(orderId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

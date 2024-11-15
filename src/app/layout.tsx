@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/noto-sans-sc';
 import './globals.css';
-import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '@/providers/theme-provider';
 import React from 'react';
 import { ToastProvider } from '@/providers/toast-provider';
@@ -20,17 +19,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <SessionProvider>
-        <body>
-          <ToastProvider />
-          <ThemeProvider attribute="class" defaultTheme="system">
-            <QueryProvider>
-              <StoreModal />
-              {children}
-            </QueryProvider>
-          </ThemeProvider>
-        </body>
-      </SessionProvider>
+      <body>
+        <ToastProvider />
+        <ThemeProvider attribute="class" defaultTheme="system">
+          <QueryProvider>
+            <StoreModal />
+            {children}
+          </QueryProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

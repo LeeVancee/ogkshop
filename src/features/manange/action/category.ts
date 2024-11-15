@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import prismadb from '@/lib/prismadb';
 
 export async function getCategory(categoryId: string) {
@@ -21,7 +21,7 @@ export async function getCategory(categoryId: string) {
 }
 
 export async function createCategory(storeId: string, data: { name: string; billboardId: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -61,7 +61,7 @@ export async function createCategory(storeId: string, data: { name: string; bill
 }
 
 export async function updateCategory(categoryId: string, storeId: string, data: { name: string; billboardId: string }) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -107,7 +107,7 @@ export async function updateCategory(categoryId: string, storeId: string, data: 
 }
 
 export async function deleteCategory(categoryId: string, storeId: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

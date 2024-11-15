@@ -3,7 +3,7 @@
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 
 export async function createCheckoutSession(
   storeId: string,
@@ -12,7 +12,7 @@ export async function createCheckoutSession(
   sizeIds: string[],
   colorIds: string[]
 ) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {
@@ -139,7 +139,7 @@ export async function createCheckoutSession(
 }
 
 export async function createOrderPaySession(storeId: string, orderId?: string) {
-  const session = await auth();
+  const session = await getSession();
   const userId = session?.user.id;
 
   if (!userId) {

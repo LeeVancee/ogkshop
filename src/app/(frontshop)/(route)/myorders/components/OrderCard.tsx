@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { Truck, Package, MapPin, Phone, DollarSign } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -12,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { useCreateOrderPaySession } from '@/features/shop/api/use-checkout';
 import { useDeleteMyOrders } from '@/features/shop/api/use-delete-myorders';
+import { authClient } from '@/lib/auth-client';
 
 interface OrderCardProps {
   id: string;
@@ -28,17 +27,20 @@ interface OrderProps {
 }
 
 export default function OrderCard({ order }: OrderProps) {
-  const session = useSession();
-  const router = useRouter();
+  const {
+    data: session,
+
+    error, //error object
+  } = authClient.useSession();
   const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
-  const user = session.data?.user;
+
   const [open, setOpen] = useState(false);
   const { mutate: createOrderPaySession, isPending: isCreatingOrderPaySessionPending } = useCreateOrderPaySession();
   const { mutate: deleteOrder, isPending: isDeletingOrderPending } = useDeleteMyOrders();
   const isPending = isCreatingOrderPaySessionPending || isDeletingOrderPending;
 
   const handlePay = async () => {
-    if (!user) {
+    if (!session.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }

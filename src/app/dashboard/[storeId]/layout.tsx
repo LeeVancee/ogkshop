@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/backside/app-sidebar';
 import { Separator } from '@/components/ui/separator';
-import { auth } from '@/auth';
+import { getSession } from '@/features/auth/getSession';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+  const session = await getSession();
   if (!session?.user) {
     redirect('/auth');
   }
