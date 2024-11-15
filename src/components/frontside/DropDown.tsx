@@ -13,17 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
-import { useEffect, useState } from 'react';
 
 export function DropDown() {
   const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
 
   const { data: session, isPending, error } = authClient.useSession();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const handleLogout = () => {
     authClient.signOut({
@@ -34,16 +28,6 @@ export function DropDown() {
       },
     });
   };
-
-  if (isPending) {
-    return (
-      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-        <Avatar className="h-8 w-8">
-          <AvatarFallback />
-        </Avatar>
-      </Button>
-    );
-  }
 
   if (!session) {
     return (
