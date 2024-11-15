@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const UpdateNameSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -32,14 +33,20 @@ export function UpdateNameForm({ defaultValue }: UpdateNameFormProps) {
   });
 
   const onSubmit = async (data: UpdateNameFormValues) => {
-    try {
-      setIsPending(true);
-      await authClient.updateUser({
+    await authClient.updateUser(
+      {
         name: data.name,
-      });
-    } finally {
-      setIsPending(false);
-    }
+      },
+      {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast.success('Updated!');
+          setIsPending(false);
+        },
+      }
+    );
   };
 
   return (

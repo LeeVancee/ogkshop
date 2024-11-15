@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const UpdatePasswordSchema = z
   .object({
@@ -32,16 +33,22 @@ export function UpdatePasswordForm() {
   });
 
   const onSubmit = async (data: UpdatePasswordFormValues) => {
-    try {
-      setIsPending(true);
-      await authClient.changePassword({
+    await authClient.changePassword(
+      {
         newPassword: data.newPassword,
         currentPassword: data.currentPassword,
         revokeOtherSessions: true,
-      });
-    } finally {
-      setIsPending(false);
-    }
+      },
+      {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast.success('Successfully changed password!');
+          setIsPending(false);
+        },
+      }
+    );
   };
 
   return (
