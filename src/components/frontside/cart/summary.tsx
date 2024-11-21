@@ -21,7 +21,7 @@ const Summary = () => {
   const { mutate: createCheckoutSession } = useCreateCheckoutSession();
 
   const onCheckout = async () => {
-    if (!session.user) {
+    if (!session?.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }
