@@ -27,11 +27,7 @@ interface OrderProps {
 }
 
 export default function OrderCard({ order }: OrderProps) {
-  const {
-    data: session,
-
-    error, //error object
-  } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
 
   const [open, setOpen] = useState(false);
@@ -40,7 +36,7 @@ export default function OrderCard({ order }: OrderProps) {
   const isPending = isCreatingOrderPaySessionPending || isDeletingOrderPending;
 
   const handlePay = async () => {
-    if (!session.user) {
+    if (!session?.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }
