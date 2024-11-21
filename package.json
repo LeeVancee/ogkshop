@@ -40,7 +40,6 @@
     "date-fns": "^3.6.0",
     "lucide-react": "^0.396.0",
     "next": "15.0.3",
-    "next-cloudinary": "^6.16.0",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
     "prisma": "^5.21.1",

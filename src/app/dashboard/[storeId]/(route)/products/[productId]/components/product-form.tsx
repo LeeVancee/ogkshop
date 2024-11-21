@@ -123,12 +123,14 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
-                  <ImageUpload
-                    value={field.value.map((image) => image.url)}
-                    disabled={isPending}
-                    onChange={(url) => field.onChange([...field.value, { url }])}
-                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
-                  />
+                  <div className="max-w-[550px]">
+                    <ImageUpload
+                      value={field.value.map((image) => image.url)}
+                      disabled={isPending}
+                      onChange={(url) => field.onChange([...field.value, { url }])}
+                      onRemove={() => field.onChange('')}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -84,12 +84,14 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
               <FormItem>
                 <FormLabel>Background image</FormLabel>
                 <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
-                    disabled={isPending}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange('')}
-                  />
+                  <div className="max-w-[550px]">
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      disabled={isPending}
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange('')}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
