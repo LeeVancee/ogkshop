@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/noto-sans-sc';
 import './globals.css';
+import '@uploadthing/react/styles.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import React from 'react';
 import { ToastProvider } from '@/providers/toast-provider';
