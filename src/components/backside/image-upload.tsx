@@ -1,23 +1,20 @@
 'use client';
 
-import { CldUploadWidget } from 'next-cloudinary';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { UploadDropzone } from '@/utils/uploadthing';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/ui/button';
 
 interface ImageUploadProps {
   disabled?: boolean;
   onChange: (value: string) => void;
-  onRemove: (value: string) => void;
+  onRemove: () => void;
   value: string[];
 }
 
-const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) => {
-  const onUpload = (result: any) => {
-    onChange(result.info.secure_url);
-  };
-
+const ImageUpload: React.FC<ImageUploadProps> = ({ disabled, onChange, onRemove, value }) => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -34,7 +31,7 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
         {value.map((url) => (
           <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
             <div className="z-10 absolute top-2 right-2">
-              <Button type="button" onClick={() => onRemove(url)} variant="destructive" size="sm">
+              <Button type="button" onClick={onRemove} variant="destructive" size="icon" disabled={disabled}>
                 <Trash className="h-4 w-4" />
               </Button>
             </div>
@@ -42,20 +39,26 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
           </div>
         ))}
       </div>
-      <CldUploadWidget onSuccess={onUpload} uploadPreset="br3zkub1">
-        {({ open }) => {
-          const onClick = () => {
-            open();
-          };
-
-          return (
-            <Button type="button" disabled={disabled} variant="secondary" onClick={onClick}>
-              <ImagePlus className="h-4 w-4 mr-2" />
-              Upload an Image
-            </Button>
-          );
-        }}
-      </CldUploadWidget>
+      {value.length === 0 && (
+        <div>
+          <UploadDropzone
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              onChange(res?.[0]?.url);
+              toast.success('图片上传成功');
+            }}
+            onUploadError={(error: Error) => {
+              toast.error(`上传失败: ${error.message}`);
+            }}
+            appearance={{
+              container: 'border-dashed border-2 border-gray-200 rounded-lg p-4',
+              label: 'text-sm text-gray-600',
+              allowedContent: 'text-xs text-gray-400',
+              button: disabled ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer',
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

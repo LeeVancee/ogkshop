@@ -1,11 +1,6 @@
-import { createRouteHandler } from 'uploadthing/next';
+import { generateUploadButton, generateUploadDropzone } from '@uploadthing/react';
 
-import { ourFileRouter } from '@/app/api/uploadthing/core';
+import type { OurFileRouter } from '@/app/api/uploadthing/core';
 
-// Export routes for Next App Router
-export const { GET, POST } = createRouteHandler({
-  router: ourFileRouter,
-
-  // Apply an (optional) custom config:
-  // config: { ... },
-});
+export const UploadButton = generateUploadButton<OurFileRouter>();
+export const UploadDropzone = generateUploadDropzone<OurFileRouter>();
