@@ -123,12 +123,22 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
-                  <div className="max-w-[550px]">
+                  <div className="max-w-[800px]">
+                    {' '}
+                    {/* 增加宽度以适应多图显示 */}
                     <ImageUpload
                       value={field.value.map((image) => image.url)}
                       disabled={isPending}
-                      onChange={(url) => field.onChange([...field.value, { url }])}
-                      onRemove={() => field.onChange('')}
+                      onChange={(urls) => {
+                        // 将新的 URL 数组转换为符合表单数据结构的格式
+                        const newImages = urls.map((url) => ({ url }));
+                        field.onChange(newImages);
+                      }}
+                      onRemove={(url) => {
+                        // 移除特定 URL 的图片
+                        const filteredImages = field.value.filter((image) => image.url !== url);
+                        field.onChange(filteredImages);
+                      }}
                     />
                   </div>
                 </FormControl>

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { createBillboard, updateBillboard, deleteBillboard } from '../action/billboard';
 
 export const useCreateBillboard = () => {

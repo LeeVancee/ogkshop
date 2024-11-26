@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteMyOrder } from '../queries';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 export const useDeleteMyOrders = () => {
   const queryClient = useQueryClient();

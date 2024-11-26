@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import OrderCard from './OrderCard';
 import useCart from '@/hooks/use-cart';
 import { useGetMyOrders } from '@/features/shop/api/use-get-myorders';

@@ -33,7 +33,7 @@
     "@tanstack/react-table": "^8.20.5",
     "@uploadthing/react": "^7.1.1",
     "babel-plugin-react-compiler": "19.0.0-beta-8a03594-20241020",
-    "better-auth": "^0.8.3",
+    "better-auth": "^1.0.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",

@@ -2,11 +2,10 @@ import type { Metadata } from 'next';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/noto-sans-sc';
 import './globals.css';
-import { ThemeProvider } from '@/providers/theme-provider';
 import React from 'react';
-import { ToastProvider } from '@/providers/toast-provider';
 import { QueryProvider } from '@/providers/query-provider';
 import { StoreModal } from '@/components/backside/modals/store-modal';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP',
@@ -20,13 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ToastProvider />
-        <ThemeProvider attribute="class" defaultTheme="system">
-          <QueryProvider>
-            <StoreModal />
-            {children}
-          </QueryProvider>
-        </ThemeProvider>
+        <Toaster />
+        <QueryProvider>
+          <StoreModal />
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

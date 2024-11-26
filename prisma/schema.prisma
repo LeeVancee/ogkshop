@@ -38,6 +38,11 @@ model Session {
 
   impersonatedBy String?
 
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+
+  @@unique([token])
   @@map("session")
 }
 
@@ -53,6 +58,12 @@ model Account {
   expiresAt    DateTime?
   password     String?
 
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
   @@map("account")
 }
 
@@ -61,6 +72,9 @@ model Verification {
   identifier String
   value      String
   expiresAt  DateTime
+
+  createdAt DateTime?
+  updatedAt DateTime?
 
   @@map("verification")
 }
