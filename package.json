@@ -54,6 +54,7 @@
     "react-medium-image-zoom": "^5.2.10",
     "react-spinners": "^0.13.8",
     "recharts": "2.13.3",
+    "sonner": "^1.7.0",
     "stripe": "^17.4.0",
     "svix": "^1.37.0",
     "tailwind-merge": "^2.5.4",
