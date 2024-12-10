@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/backside/app-sidebar';
 import { Separator } from '@/components/ui/separator';
 import { getSession } from '@/features/auth/getSession';
 import { redirect } from 'next/navigation';
+import UnauthorisedError from '@/components/unauthorized-error';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP - Dashboard',
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
+
+  if (session?.user.role !== 'admin') {
+    return <UnauthorisedError />;
+  }
   if (!session?.user) {
     redirect('/auth');
   }
