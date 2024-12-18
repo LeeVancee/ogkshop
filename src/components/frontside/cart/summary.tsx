@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import Currency from '@/components/frontside/currency';
 import useCart from '@/hooks/use-cart';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useCreateCheckoutSession } from '@/features/shop/api/use-checkout';
 import { authClient } from '@/lib/auth-client';
 

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { createCheckoutSession, createOrderPaySession } from '../checkout';
 
 export const useCreateCheckoutSession = () => {
