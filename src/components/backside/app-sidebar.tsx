@@ -18,6 +18,7 @@ import { LayoutDashboard, Image, ListTree, Ruler, Palette, Package, ShoppingCart
 import StoreSwitcher from './store-switcher';
 import Link from 'next/link';
 import { NavUser } from './nav-user';
+import { ShopSwitcher } from './shop-switcher';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
@@ -26,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = {
     navMain: [
       {
-        title: 'Getting Started',
+        title: 'Menu',
         url: '#',
         items: [
           {
@@ -82,12 +83,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <StoreSwitcher />
+        {/*   <StoreSwitcher /> */}
+        <ShopSwitcher />
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((group) => (
           <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-muted-foreground font-bold">{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
