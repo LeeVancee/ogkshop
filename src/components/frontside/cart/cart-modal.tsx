@@ -31,7 +31,7 @@ export function CartModal() {
               Remove All
             </Button>
           </div>
-          <ul className="flex-grow overflow-auto py-4">
+          <ul className="grow overflow-auto py-4">
             {cart.items.map((item) => (
               <CartItem
                 key={`${item.id}-${item.selectedSize.id}-${item.selectedColor.id}`}

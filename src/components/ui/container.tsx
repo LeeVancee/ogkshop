@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 
 const Container = ({ children, className }: ContainerProps) => {
-  return <div className={`mx-auto max-w-screen-xl ${className}`}>{children}</div>;
+  return <div className={`mx-auto max-w-(--breakpoint-xl) ${className}`}>{children}</div>;
 };
 
 export default Container;

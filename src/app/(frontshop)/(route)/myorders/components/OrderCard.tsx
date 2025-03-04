@@ -56,7 +56,7 @@ export default function OrderCard({ order }: OrderProps) {
       <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
       <Card className="w-full max-w-3xl mx-auto mt-4 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-grow p-4">
+          <div className="grow p-4">
             <CardHeader className="px-0 py-2">
               <CardTitle className="text-2xl font-bold text-primary">Order #{id.slice(-6)}</CardTitle>
               <div className="flex items-center space-x-4 text-sm text-muted-foreground">

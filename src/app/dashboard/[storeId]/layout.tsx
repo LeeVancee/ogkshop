@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await getSession();
 
   if (session?.user.role !== 'admin') {
-    return <UnauthorisedError />;
+    redirect('/unauthorized');
   }
   if (!session?.user) {
     redirect('/auth');
