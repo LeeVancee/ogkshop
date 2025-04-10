@@ -45,7 +45,7 @@ export default function MainNav() {
                         <Link
                           href={route.href}
                           className={cn(
-                            'flex items-center justify-between rounded-md p-2 text-sm font-medium leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                            'flex items-center justify-between rounded-md p-2 text-sm font-medium leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
                             route.active
                               ? 'bg-accent text-accent-foreground'
                               : 'text-gray-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
