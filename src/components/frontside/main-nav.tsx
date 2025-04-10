@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Category } from '@/types';
@@ -52,7 +52,6 @@ export default function MainNav() {
                           )}
                         >
                           {route.label}
-                          {route.active && <CheckCircle className="ml-2 h-4 w-4" />}
                         </Link>
                       </NavigationMenuLink>
                     </li>

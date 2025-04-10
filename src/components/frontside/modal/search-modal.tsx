@@ -58,7 +58,7 @@ export function SearchModal() {
 
   return (
     <div className="flex flex-1">
-      <Button variant="outline" onClick={() => setOpen(true)} className="h-10 w-10 p-0" aria-label="Search">
+      <Button variant="outline" onClick={() => setOpen(true)} className="h-9 w-9 p-0" aria-label="Search">
         <Search className="h-4 w-4" />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
