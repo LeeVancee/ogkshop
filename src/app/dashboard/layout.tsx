@@ -1,5 +1,5 @@
 import React from 'react';
-import { DropDown } from '@/components/backside/DropDown';
+
 import { Metadata } from 'next';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/backside/app-sidebar';
@@ -14,13 +14,14 @@ export const metadata: Metadata = {
   title: 'OGKSHOP - Dashboard',
 };
 
-export default async function DashboardLayout({
-  children,
-  params,
-}: {
+export default async function DashboardLayout(props: {
   children: React.ReactNode;
-  params: { storeId: string };
+  params: Promise<{ storeId: string }>;
 }) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const session = await getSession();
   const adminId = session?.user.id;
   if (session?.user.role !== 'admin') {

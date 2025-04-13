@@ -2,21 +2,30 @@ import { getSession } from '@/actions/getSession';
 import HomeLoader from '@/components/loader/home-loader';
 
 import prismadb from '@/lib/prismadb';
-import { redirect, useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+
+// 添加动态标记，避免静态生成尝试
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const session = await getSession();
 
-  const adminId = session?.user.id;
+  // 如果没有会话或用户ID，重定向到首页
+  if (!session?.user?.id) {
+    redirect('/');
+  }
 
-  // 检查用户是否已登录，以及是否是 admin 用户
+  const adminId = session.user.id;
+
+  // 检查用户是否是 admin 用户
   const user = await prismadb.user.findUnique({
     where: {
       id: adminId,
-      role: 'ADMIN',
     },
   });
 
-  if (!user) {
+  // 如果用户不存在或角色不是ADMIN，重定向到首页
+  if (!user || user.role !== 'admin') {
     redirect('/');
   }
 
@@ -30,13 +39,6 @@ export default async function DashboardPage() {
     redirect(`/dashboard/${store.id}`);
   }
 
-  if (!store) {
-    redirect('/dashboard/create');
-  }
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <HomeLoader />
-    </div>
-  );
+  // 如果没有商店，重定向到创建页面
+  redirect('/dashboard/create');
 }

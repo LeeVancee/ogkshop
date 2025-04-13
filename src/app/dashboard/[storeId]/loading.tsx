@@ -1,5 +1,3 @@
-'use client';
-
 import { Loader } from '@/components/backside/loader';
 
 const Loading = () => {
