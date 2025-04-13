@@ -1,8 +1,9 @@
 'use client';
 
+import axios from 'axios';
 import { useState } from 'react';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { SizeColumn } from './columns';
-import { useActionDeleteSize } from '@/features/manange/mutation/size';
+import ky from 'ky';
 
 interface CellActionProps {
   data: SizeColumn;
@@ -26,14 +27,20 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const { mutate: deleteSize, isPending } = useActionDeleteSize();
+  const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
-    deleteSize(data.id, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/sizes/${data.id}`);
+      toast.success('Size deleted.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Make sure you removed all products using this size first.');
+    } finally {
+      setOpen(false);
+      setLoading(false);
+    }
   };
 
   const onCopy = (id: string) => {
@@ -43,7 +50,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

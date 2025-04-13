@@ -8,19 +8,16 @@ import { DataTable } from '@/components/backside/data-table';
 import { Heading } from '@/components/backside/heading';
 import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
-import { columns, ProductColumn } from './columns';
-import { useGetProducts } from '@/features/manange/api/use-get-product';
-import HomeLoader from '@/components/loader/home-loader';
 
-export const ProductsClient = () => {
+import { ProductColumn, columns } from './columns';
+
+interface ProductsClientProps {
+  data: ProductColumn[];
+}
+
+export const ProductsClient = ({ data }: ProductsClientProps) => {
   const params = useParams();
   const router = useRouter();
-
-  const { data, isLoading } = useGetProducts(params.storeId as string);
-
-  if (isLoading || !data) {
-    return <HomeLoader />;
-  }
 
   return (
     <>

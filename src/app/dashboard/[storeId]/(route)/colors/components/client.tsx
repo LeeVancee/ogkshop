@@ -9,18 +9,15 @@ import { Heading } from '@/components/backside/heading';
 import { Separator } from '@/components/ui/separator';
 import { ApiList } from '@/components/backside/api/api-list';
 
-import { columns } from './columns';
-import { useGetColors } from '@/features/manange/api/use-get-color';
-import HomeLoader from '@/components/loader/home-loader';
+import { columns, ColorColumn } from './columns';
 
-export const ColorClient = () => {
+interface ColorClientProps {
+  data: ColorColumn[];
+}
+
+export const ColorClient = ({ data }: ColorClientProps) => {
   const params = useParams();
   const router = useRouter();
-  const { data, isLoading } = useGetColors(params.storeId as string);
-
-  if (isLoading || !data) {
-    return <HomeLoader />;
-  }
 
   return (
     <>

@@ -3,7 +3,9 @@
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { Trash } from 'lucide-react';
+import { Store } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -15,8 +17,7 @@ import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { ApiAlert } from '@/components/backside/api/api-alert';
 import { useOrigin } from '@/hooks/use-origin';
-import { useGetSettings } from '@/features/manange/api/use-get-settings';
-import { useDeleteStore, useUpdateStore } from '@/features/manange/mutation/store';
+import ky from 'ky';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -24,33 +25,49 @@ const formSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof formSchema>;
 
-export const SettingsForm = () => {
+interface SettingsFormProps {
+  initialData: Store;
+}
+
+export const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const params = useParams();
+  const router = useRouter();
   const origin = useOrigin();
-  const { data: initialData, isLoading } = useGetSettings(params.storeId as string);
+
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
   });
 
-  const { mutate: updateStore, isPending: isUpdating } = useUpdateStore();
-  const { mutate: deleteStore, isPending: isDeleting } = useDeleteStore();
-  const router = useRouter();
-  const loading = isUpdating || isDeleting;
-
   const onSubmit = async (data: SettingsFormValues) => {
-    updateStore(data);
+    try {
+      setLoading(true);
+      await ky.patch(`/api/stores/${params.storeId}`, { json: data });
+      router.refresh();
+      toast.success('Store updated.');
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onDelete = async () => {
-    deleteStore(undefined, {
-      onSuccess: () => {
-        setOpen(false);
-        router.push('/dashboard');
-      },
-    });
+    try {
+      setLoading(true);
+      await ky.delete(`/api/stores/${params.storeId}`);
+      router.refresh();
+      router.push('/dashboard');
+      toast.success('Store deleted.');
+    } catch (error: any) {
+      toast.error('Make sure you removed all products and categories first.');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   return (

@@ -1,8 +1,9 @@
 'use client';
 
+import axios from 'axios';
 import { useState } from 'react';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import {
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 
 import { CategoryColumn } from './columns';
-import { useActionDeleteCategory } from '@/features/manange/mutation/category';
+import ky from 'ky';
 
 interface CellActionProps {
   data: CategoryColumn;
@@ -26,14 +27,20 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const { mutate: deleteCategory, isPending: isDeletePending } = useActionDeleteCategory();
+  const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
-    deleteCategory(data.id, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/categories/${data.id}`);
+      toast.success('Category deleted.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Make sure you removed all products using this category first.');
+    } finally {
+      setOpen(false);
+      setLoading(false);
+    }
   };
 
   const onCopy = (id: string) => {
@@ -43,7 +50,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isDeletePending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

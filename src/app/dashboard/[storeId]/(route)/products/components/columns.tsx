@@ -1,6 +1,8 @@
+'use client';
+
 import { ColumnDef } from '@tanstack/react-table';
+
 import { CellAction } from './cell-action';
-import Image from 'next/image';
 
 export type ProductColumn = {
   id: string;
@@ -12,25 +14,9 @@ export type ProductColumn = {
   createdAt: string;
   isFeatured: boolean;
   isArchived: boolean;
-  images: string;
 };
 
-export const columns: ColumnDef<ProductColumn, unknown>[] = [
-  {
-    accessorKey: 'images',
-    header: 'Image',
-    cell: ({ row }) => {
-      const imageUrls = row.original.images.split(', ');
-      const firstImageUrl = imageUrls[0] || '/placeholder-image.jpg';
-      return (
-        <div className="flex items-center">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full">
-            <Image src={firstImageUrl} alt={row.original.name} fill sizes="40px" className="object-cover" />
-          </div>
-        </div>
-      );
-    },
-  },
+export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -58,14 +44,14 @@ export const columns: ColumnDef<ProductColumn, unknown>[] = [
   {
     accessorKey: 'color',
     header: 'Color',
+    cell: ({ row }) => <div className="flex items-center gap-x-2">{row.original.color}</div>,
   },
   {
     accessorKey: 'createdAt',
     header: 'Date',
   },
   {
-    accessorKey: 'id',
-    header: 'Actions',
+    id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

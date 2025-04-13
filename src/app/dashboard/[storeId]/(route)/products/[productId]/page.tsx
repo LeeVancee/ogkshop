@@ -1,39 +1,41 @@
-'use client';
+import prismadb from '@/lib/prismadb';
 
 import { ProductForm } from './components/product-form';
-import { use } from 'react';
-import { useGetProduct } from '@/features/manange/api/use-get-product';
-import { useGetCategories } from '@/features/manange/api/use-get-category';
-import { useGetColors } from '@/features/manange/api/use-get-color';
-import { useGetSizes } from '@/features/manange/api/use-get-size';
-import HomeLoader from '@/components/loader/home-loader';
 
-interface ProductPageProps {
-  params: Promise<{
-    productId: string;
-    storeId: string;
-  }>;
-}
+const ProductPage = async ({ params }: { params: { productId: string; storeId: string } }) => {
+  const product = await prismadb.product.findUnique({
+    where: {
+      id: params.productId,
+    },
+    include: {
+      images: true,
+      sizes: true,
+      colors: true,
+    },
+  });
 
-const ProductPage = ({ params }: ProductPageProps) => {
-  const { storeId, productId } = use(params);
-  const { data: product, isLoading: productLoading } = useGetProduct(productId);
-  const { data: categories, isLoading: categoriesLoading } = useGetCategories(storeId);
-  const { data: colors, isLoading: colorsLoading } = useGetColors(storeId);
-  const { data: sizes, isLoading: sizesLoading } = useGetSizes(storeId);
+  const categories = await prismadb.category.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
 
-  if (productLoading || categoriesLoading || colorsLoading || sizesLoading) {
-    return <HomeLoader />;
-  }
+  const sizes = await prismadb.size.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
+
+  const colors = await prismadb.color.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <div className="flex-col">
-          <div className="flex-1 space-y-4 p-8 pt-6">
-            <ProductForm categories={categories!} colors={colors!} sizes={sizes!} initialData={product!} />
-          </div>
-        </div>
+        <ProductForm categories={categories} colors={colors} sizes={sizes} initialData={product} />
       </div>
     </div>
   );

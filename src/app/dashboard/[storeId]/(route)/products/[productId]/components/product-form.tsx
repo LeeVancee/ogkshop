@@ -1,12 +1,13 @@
 'use client';
 
 import * as z from 'zod';
+import axios from 'axios';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { Trash } from 'lucide-react';
-
+import { Category, Color, Image, Product, Size } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Input } from '@/components/ui/input';
@@ -19,9 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import ImageUpload from '@/components/backside/image-upload';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MultiSelect } from '@/components/multiple-select';
-import { Category, Color, Image, Product, Size } from '@/types';
-import { CategoryColumn } from '@/features/manange/type';
-import { useCreateProduct, useUpdateProduct, useDeleteProduct } from '@/features/manange/mutation/product';
+import ky from 'ky';
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
@@ -42,10 +41,9 @@ interface ProductFormProps {
         images: Image[];
         sizes: Size[];
         colors: Color[];
-        quantity: number;
       })
     | null;
-  categories: CategoryColumn[];
+  categories: Category[];
   colors: Color[];
   sizes: Size[];
 }
@@ -55,6 +53,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit product' : 'Create product';
   const description = initialData ? 'Edit a product.' : 'Add a new product';
@@ -85,30 +84,47 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-  const { mutate: createProduct, isPending: isCreatePending } = useCreateProduct();
-  const { mutate: updateProduct, isPending: isUpdatePending } = useUpdateProduct();
-  const { mutate: deleteProduct, isPending: isDeletePending } = useDeleteProduct();
-  const isPending = isCreatePending || isUpdatePending || isDeletePending;
 
   const onSubmit = async (data: ProductFormValues) => {
-    if (initialData) {
-      updateProduct(data);
-    } else {
-      createProduct(data);
+    try {
+      setLoading(true);
+      if (initialData) {
+        await ky.patch(`/api/${params.storeId}/products/${params.productId}`, { json: data });
+      } else {
+        await ky.post(`/api/${params.storeId}/products`, { json: data });
+      }
+      router.refresh();
+      router.push(`/dashboard/${params.storeId}/products`);
+      toast.success(toastMessage);
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const onDelete = async () => {
-    deleteProduct();
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/products/${params.productId}`);
+      router.refresh();
+      router.push(`/dashboard/${params.storeId}/products`);
+      toast.success('Product deleted.');
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={isPending} variant="destructive" size="sm" onClick={() => setOpen(true)}>
+          <Button disabled={loading} variant="destructive" size="sm" onClick={() => setOpen(true)}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -123,24 +139,12 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
-                  <div className="max-w-[800px]">
-                    {' '}
-                    {/* 增加宽度以适应多图显示 */}
-                    <ImageUpload
-                      value={field.value.map((image) => image.url)}
-                      disabled={isPending}
-                      onChange={(urls) => {
-                        // 将新的 URL 数组转换为符合表单数据结构的格式
-                        const newImages = urls.map((url) => ({ url }));
-                        field.onChange(newImages);
-                      }}
-                      onRemove={(url) => {
-                        // 移除特定 URL 的图片
-                        const filteredImages = field.value.filter((image) => image.url !== url);
-                        field.onChange(filteredImages);
-                      }}
-                    />
-                  </div>
+                  <ImageUpload
+                    value={field.value.map((image) => image.url)}
+                    disabled={loading}
+                    onChange={(url) => field.onChange([...field.value, { url }])}
+                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -154,7 +158,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={isPending} placeholder="Product name" {...field} />
+                    <Input disabled={loading} placeholder="Product name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +171,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input type="number" disabled={isPending} placeholder="9.99" {...field} />
+                    <Input type="number" disabled={loading} placeholder="9.99" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,7 +184,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <Select
-                    disabled={isPending}
+                    disabled={loading}
                     onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
@@ -240,7 +244,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
-                  <Input {...field} type="number" placeholder="Enter product quantity" disabled={isPending} />
+                  <Input {...field} type="number" placeholder="Enter product quantity" disabled={loading} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -284,7 +288,7 @@ export const ProductForm = ({ initialData, categories, sizes, colors }: ProductF
               )}
             />
           </div>
-          <Button disabled={isPending} className="ml-auto" type="submit">
+          <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

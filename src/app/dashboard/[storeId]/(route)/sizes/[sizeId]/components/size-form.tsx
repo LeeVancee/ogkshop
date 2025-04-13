@@ -1,19 +1,22 @@
 'use client';
 
 import * as z from 'zod';
+import axios from 'axios';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { Trash } from 'lucide-react';
 import { Size } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/backside/heading';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
-import { useCreateSize, useUpdateSize, useDeleteSize } from '@/features/manange/mutation/size';
+import ky from 'ky';
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -45,30 +48,46 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
     },
   });
 
-  const { mutate: createSize, isPending: isCreatePending } = useCreateSize();
-  const { mutate: updateSize, isPending: isUpdatePending } = useUpdateSize();
-  const { mutate: deleteSize, isPending: isDeletePending } = useDeleteSize();
-  const isPending = isCreatePending || isUpdatePending || isDeletePending;
-
   const onSubmit = async (data: SizeFormValues) => {
-    if (initialData) {
-      updateSize(data);
-    } else {
-      createSize(data);
+    try {
+      setLoading(true);
+      if (initialData) {
+        await ky.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, { json: data });
+      } else {
+        await ky.post(`/api/${params.storeId}/sizes`, { json: data });
+      }
+      router.refresh();
+      router.push(`/dashboard/${params.storeId}/sizes`);
+      toast.success(toastMessage);
+    } catch (error: any) {
+      toast.error('Something went wrong.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const onDelete = async () => {
-    deleteSize();
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
+      router.refresh();
+      router.push(`/dashboard/${params.storeId}/sizes`);
+      toast.success('Size deleted.');
+    } catch (error: any) {
+      toast.error('Make sure you removed all products using this size first.');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isPending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={loading} />
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
-          <Button disabled={isPending} variant="destructive" size="sm" onClick={() => setOpen(true)}>
+          <Button disabled={loading} variant="destructive" size="sm" onClick={() => setOpen(true)}>
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -84,7 +103,7 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input disabled={isPending} placeholder="Size name" {...field} />
+                    <Input disabled={loading} placeholder="Size name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -97,14 +116,14 @@ export const SizeForm = ({ initialData }: SizeFormProps) => {
                 <FormItem>
                   <FormLabel>Value</FormLabel>
                   <FormControl>
-                    <Input disabled={isPending} placeholder="Size value" {...field} />
+                    <Input disabled={loading} placeholder="Size value" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <Button disabled={isPending} className="ml-auto" type="submit">
+          <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>
         </form>

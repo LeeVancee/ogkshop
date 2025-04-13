@@ -1,9 +1,10 @@
 'use client';
 
+import axios from 'axios';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 
 import { AlertModal } from '@/components/backside/modals/alert-modal';
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { ProductColumn } from './columns';
-import { useActionDeleteProduct } from '@/features/manange/mutation/product';
+import ky from 'ky';
 
 interface CellActionProps {
   data: ProductColumn;
@@ -27,13 +28,19 @@ export const CellAction = ({ data }: CellActionProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
-  const { mutate: deleteProduct, isPending } = useActionDeleteProduct();
+
   const onConfirm = async () => {
-    deleteProduct(data.id, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/products/${data.id}`);
+      toast.success('Product deleted.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Something went wrong');
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
 
   const onCopy = (id: string) => {
@@ -43,7 +50,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

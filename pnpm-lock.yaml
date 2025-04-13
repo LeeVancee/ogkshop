@@ -92,6 +92,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      ky:
+        specifier: ^1.8.0
+        version: 1.8.0
       lucide-react:
         specifier: ^0.487.0
         version: 0.487.0(react@19.0.0)
@@ -2362,6 +2365,10 @@ packages:
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  ky@1.8.0:
+    resolution: {integrity: sha512-DoKGmG27nT8t/1F9gV8vNzggJ3mLAyD49J8tTMWHeZvS8qLc7GlyTieicYtFzvDznMe/q2u38peOjkWc5/pjvw==}
+    engines: {node: '>=18'}
 
   kysely@0.27.6:
     resolution: {integrity: sha512-FIyV/64EkKhJmjgC0g2hygpBv5RNWVPyNCqSAD7eTCv6eFWNIi4PN1UvdSJGicN/o35bnevgis4Y0UDC0qi8jQ==}
@@ -5506,6 +5513,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  ky@1.8.0: {}
 
   kysely@0.27.6: {}
 
