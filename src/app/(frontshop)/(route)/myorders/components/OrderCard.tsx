@@ -4,12 +4,11 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Truck, Package, MapPin, Phone, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
+import ky from 'ky';
 import { AlertModal } from '@/components/frontside/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useCreateOrderPaySession } from '@/features/shop/api/use-checkout';
-import { useDeleteMyOrders } from '@/features/shop/api/use-delete-myorders';
 import { authClient } from '@/lib/auth-client';
 
 interface OrderCardProps {
@@ -31,24 +30,58 @@ export default function OrderCard({ order }: OrderProps) {
   const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
 
   const [open, setOpen] = useState(false);
-  const { mutate: createOrderPaySession, isPending: isCreatingOrderPaySessionPending } = useCreateOrderPaySession();
-  const { mutate: deleteOrder, isPending: isDeletingOrderPending } = useDeleteMyOrders();
-  const isPending = isCreatingOrderPaySessionPending || isDeletingOrderPending;
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const isPending = isPaymentLoading || isDeleteLoading;
 
   const handlePay = async () => {
     if (!session?.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }
-    createOrderPaySession({ storeId: process.env.NEXT_PUBLIC_STORE_ID!, orderId: id });
+
+    try {
+      setIsPaymentLoading(true);
+      const response = await ky
+        .post('/api/order-payment', {
+          json: {
+            storeId: process.env.NEXT_PUBLIC_STORE_ID!,
+            orderId: id,
+          },
+          timeout: 10000, // 10秒超时
+        })
+        .json<{ url: string }>();
+
+      if (response.url) {
+        window.location.href = response.url;
+      } else {
+        toast.error('支付会话创建失败');
+      }
+    } catch (error) {
+      toast.error('支付会话创建过程中发生错误');
+      console.error('支付错误:', error);
+    } finally {
+      setIsPaymentLoading(false);
+    }
   };
 
   const onDelete = async () => {
-    deleteOrder(id, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+    try {
+      setIsDeleteLoading(true);
+      await ky.delete(`/api/myorders/${id}`, {
+        timeout: 5000, // 5秒超时
+      });
+
+      toast.success('订单已删除');
+      setOpen(false);
+      // 刷新页面以显示更新后的订单列表
+      window.location.reload();
+    } catch (error) {
+      toast.error('删除订单过程中发生错误');
+      console.error('删除错误:', error);
+    } finally {
+      setIsDeleteLoading(false);
+    }
   };
 
   return (

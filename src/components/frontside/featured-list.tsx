@@ -1,25 +1,33 @@
-'use client';
-import { useGetFeatured } from '@/features/shop/api/use-get-featured';
 import ProductCard from './product-card';
-import FeaturedLoader from '../loader/featured-loader';
+
+import prismadb from '@/lib/prismadb';
 
 interface FeaturedListProps {
   title: string;
 }
 
-const FeaturedList = ({ title }: FeaturedListProps) => {
-  const { data: featuredProducts, isLoading } = useGetFeatured();
-
-  if (isLoading) {
-    return <FeaturedLoader />;
-  }
-
-  if (!featuredProducts || featuredProducts.length === 0) {
-    return <div className="flex justify-center items-center mt-6 lg:col-span-4 lg:mt-0">No Products</div>;
-  }
+const FeaturedList = async ({ title }: FeaturedListProps) => {
+  const featured = await prismadb.product.findMany({
+    where: {
+      isFeatured: true,
+    },
+    include: {
+      images: true,
+      /* category: {
+            include: {
+              billboard: true,
+            },
+          }, */
+      colors: true,
+      sizes: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 
   // 只取前五个产品
-  const displayProducts = featuredProducts.slice(0, 5);
+  const displayProducts = featured.slice(0, 5);
 
   return (
     <div className="space-y-4">

@@ -11,12 +11,13 @@ import { getStockCount } from '@/actions/get-stock-count';
 import { formatter } from '@/lib/utils';
 
 interface DashboardPageProps {
-  params: {
+  params: Promise<{
     storeId: string;
-  };
+  }>;
 }
 
-const DashboardPage = async ({ params }: DashboardPageProps) => {
+const DashboardPage = async (props: DashboardPageProps) => {
+  const params = await props.params;
   const [totalRevenue, graphRevenue, salesCount, stockCount] = await Promise.all([
     getTotalRevenue(params.storeId),
     getGraphRevenue(params.storeId),

@@ -2,15 +2,10 @@
 import React from 'react';
 import Gallery from './gallery';
 import Info from './info';
-import { useGetProduct } from '@/features/shop/api/use-get-product';
-import ProductInfoLoader from '../loader/productInfo-loader';
+import getProduct from '@/actions/get-product';
 
-export default function ProductInfo({ productId }: { productId: string }) {
-  const { data: product, isLoading } = useGetProduct({ productId });
-
-  if (isLoading) {
-    return <ProductInfoLoader />;
-  }
+export default async function ProductInfo({ productId }: { productId: string }) {
+  const product = await getProduct(productId);
 
   if (!product) {
     return null;

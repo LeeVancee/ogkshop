@@ -8,6 +8,7 @@ import { Product, Size, Color } from '@/types';
 import useCart from '@/hooks/use-cart';
 import QuantitySelector from './cart/quantity-selector';
 import { cn } from '@/lib/utils';
+import usePreviewModal from '@/hooks/use-preview-modal';
 
 interface InfoProps {
   data: Product;
@@ -18,10 +19,12 @@ const Info = ({ data }: InfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+  const { onClose: closeModal } = usePreviewModal();
 
   const onAddToCart = () => {
     if (selectedSize && selectedColor) {
       cart.addItem(data, selectedSize, selectedColor, quantity);
+      closeModal();
     } else {
       alert('Please select both size and color before adding to cart.');
     }

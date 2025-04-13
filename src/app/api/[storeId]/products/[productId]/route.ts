@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import { getSession } from '@/actions/getSession';
 
-export async function GET(req: Request, { params }: { params: { productId: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ productId: string }> }) {
+  const params = await props.params;
   try {
     if (!params.productId) {
       return new NextResponse('Product id is required', { status: 400 });
@@ -27,9 +28,10 @@ export async function GET(req: Request, { params }: { params: { productId: strin
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { productId: string; storeId: string } }) {
+export async function DELETE(req: Request, props: { params: Promise<{ productId: string; storeId: string }> }) {
+  const params = await props.params;
   try {
-    const session = await auth();
+    const session = await getSession();
     const userId = session?.user.id;
 
     if (!userId) {
@@ -64,9 +66,10 @@ export async function DELETE(req: Request, { params }: { params: { productId: st
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { productId: string; storeId: string } }) {
+export async function PATCH(req: Request, props: { params: Promise<{ productId: string; storeId: string }> }) {
+  const params = await props.params;
   try {
-    const session = await auth();
+    const session = await getSession();
     const userId = session?.user.id;
 
     const body = await req.json();

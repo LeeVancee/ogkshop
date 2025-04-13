@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { auth } from '@/auth';
 
-export async function GET(req: Request, { params }: { params: { categoryId: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ categoryId: string }> }) {
+  const params = await props.params;
   try {
     if (!params.categoryId) {
       return new NextResponse('Category id is required', { status: 400 });
@@ -25,7 +26,11 @@ export async function GET(req: Request, { params }: { params: { categoryId: stri
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { categoryId: string; storeId: string } }) {
+export async function DELETE(
+  req: Request,
+  props: { params: Promise<{ categoryId: string; storeId: string }> }
+) {
+  const params = await props.params;
   try {
     const session = await auth();
     const userId = session?.user.id;
@@ -62,7 +67,11 @@ export async function DELETE(req: Request, { params }: { params: { categoryId: s
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { categoryId: string; storeId: string } }) {
+export async function PATCH(
+  req: Request,
+  props: { params: Promise<{ categoryId: string; storeId: string }> }
+) {
+  const params = await props.params;
   try {
     const session = await auth();
     const userId = session?.user.id;

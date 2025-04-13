@@ -14,7 +14,8 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function POST(req: Request, { params }: { params: { storeId: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ storeId: string }> }) {
+  const params = await props.params;
   const { orderId } = await req.json();
 
   const authHeader = req.headers.get('Authorization');

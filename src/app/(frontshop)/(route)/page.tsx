@@ -1,6 +1,6 @@
 import Container from '@/components/ui/container';
-import HomepageClient from '@/components/frontside/homepage-client';
 import Image from 'next/image';
+import FeaturedList from '@/components/frontside/featured-list';
 
 const HomePage = () => {
   return (
@@ -27,7 +27,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <HomepageClient />
+        <FeaturedList title="Featured Product" />
       </div>
     </Container>
   );

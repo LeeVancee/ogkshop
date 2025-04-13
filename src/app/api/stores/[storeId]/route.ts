@@ -1,17 +1,17 @@
 import { NextResponse } from 'next/server';
 
 import prismadb from '@/lib/prismadb';
+
 import { getSession } from '@/actions/getSession';
 
-export async function POST(req: Request, props: { params: Promise<{ storeId: string }> }) {
-  const params = await props.params;
+export async function PATCH(req: Request, props: { params: Promise<{ orderId: string; storeId: string }> }) {
   try {
     const session = await getSession();
     const userId = session?.user.id;
-
     const body = await req.json();
+    const params = await props.params;
 
-    const { name, value } = body;
+    const { name } = body;
 
     if (!userId) {
       return new NextResponse('Unauthenticated', { status: 403 });
@@ -21,56 +21,51 @@ export async function POST(req: Request, props: { params: Promise<{ storeId: str
       return new NextResponse('Name is required', { status: 400 });
     }
 
-    if (!value) {
-      return new NextResponse('Value is required', { status: 400 });
+    if (!params.storeId) {
+      return new NextResponse('Store id is required', { status: 400 });
+    }
+
+    const store = await prismadb.store.updateMany({
+      where: {
+        id: params.storeId,
+        adminId: userId,
+      },
+      data: {
+        name,
+      },
+    });
+
+    return NextResponse.json(store);
+  } catch (error) {
+    console.log('[STORE_PATCH]', error);
+    return new NextResponse('Internal error', { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request, props: { params: Promise<{ orderId: string; storeId: string }> }) {
+  try {
+    const session = await getSession();
+    const userId = session?.user.id;
+    const params = await props.params;
+
+    if (!userId) {
+      return new NextResponse('Unauthenticated', { status: 403 });
     }
 
     if (!params.storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
 
-    const storeByUserId = await prismadb.store.findFirst({
+    const store = await prismadb.store.deleteMany({
       where: {
         id: params.storeId,
         adminId: userId,
       },
     });
 
-    if (!storeByUserId) {
-      return new NextResponse('Unauthorized', { status: 405 });
-    }
-
-    const size = await prismadb.size.create({
-      data: {
-        name,
-        value,
-        storeId: params.storeId,
-      },
-    });
-
-    return NextResponse.json(size);
+    return NextResponse.json(store);
   } catch (error) {
-    console.log('[SIZES_POST]', error);
-    return new NextResponse('Internal error', { status: 500 });
-  }
-}
-
-export async function GET(req: Request, props: { params: Promise<{ storeId: string }> }) {
-  const params = await props.params;
-  try {
-    if (!params.storeId) {
-      return new NextResponse('Store id is required', { status: 400 });
-    }
-
-    const sizes = await prismadb.size.findMany({
-      where: {
-        storeId: params.storeId,
-      },
-    });
-
-    return NextResponse.json(sizes);
-  } catch (error) {
-    console.log('[SIZES_GET]', error);
+    console.log('[STORE_DELETE]', error);
     return new NextResponse('Internal error', { status: 500 });
   }
 }

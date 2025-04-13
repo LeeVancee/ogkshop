@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Trash } from 'lucide-react';
 import { Billboard } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';

@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { getSession } from '@/actions/getSession';
 
-export async function GET(req: Request, { params }: { params: { billboardId: string } }) {
+export async function GET(req: Request, props: { params: Promise<{ billboardId: string }> }) {
+  const params = await props.params;
   try {
     if (!params.billboardId) {
       return new NextResponse('Billboard id is required', { status: 400 });
@@ -22,7 +23,11 @@ export async function GET(req: Request, { params }: { params: { billboardId: str
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { billboardId: string; storeId: string } }) {
+export async function DELETE(
+  req: Request,
+  props: { params: Promise<{ billboardId: string; storeId: string }> }
+) {
+  const params = await props.params;
   try {
     const session = await getSession();
     const userId = session?.user.id;
@@ -59,7 +64,11 @@ export async function DELETE(req: Request, { params }: { params: { billboardId: 
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { billboardId: string; storeId: string } }) {
+export async function PATCH(
+  req: Request,
+  props: { params: Promise<{ billboardId: string; storeId: string }> }
+) {
+  const params = await props.params;
   try {
     const session = await getSession();
     const userId = session?.user.id;
