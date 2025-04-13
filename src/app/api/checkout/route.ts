@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import prismadb from '@/lib/prismadb';
-import { getSession } from '@/features/auth/getSession';
+import { getSession } from '@/actions/getSession';
 
 export async function POST(req: Request) {
   try {

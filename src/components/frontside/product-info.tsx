@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import Gallery from './gallery';
 import Info from './info';

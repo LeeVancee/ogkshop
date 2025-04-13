@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import prismadb from '@/lib/prismadb';
-import { auth } from '@/auth';
+import { getSession } from '@/actions/getSession';
 
 export async function GET(req: Request, props: { params: Promise<{ categoryId: string }> }) {
   const params = await props.params;
@@ -26,13 +26,10 @@ export async function GET(req: Request, props: { params: Promise<{ categoryId: s
   }
 }
 
-export async function DELETE(
-  req: Request,
-  props: { params: Promise<{ categoryId: string; storeId: string }> }
-) {
+export async function DELETE(req: Request, props: { params: Promise<{ categoryId: string; storeId: string }> }) {
   const params = await props.params;
   try {
-    const session = await auth();
+    const session = await getSession();
     const userId = session?.user.id;
 
     if (!userId) {
@@ -67,13 +64,10 @@ export async function DELETE(
   }
 }
 
-export async function PATCH(
-  req: Request,
-  props: { params: Promise<{ categoryId: string; storeId: string }> }
-) {
+export async function PATCH(req: Request, props: { params: Promise<{ categoryId: string; storeId: string }> }) {
   const params = await props.params;
   try {
-    const session = await auth();
+    const session = await getSession();
     const userId = session?.user.id;
 
     const body = await req.json();

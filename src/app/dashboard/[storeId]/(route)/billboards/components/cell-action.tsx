@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -14,8 +14,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertModal } from '@/components/backside/modals/alert-modal';
+
 import { BillboardColumn } from './columns';
-import { useActionDeleteBillboard } from '@/features/manange/mutation/billboard';
+import ky from 'ky';
 
 interface CellActionProps {
   data: BillboardColumn;
@@ -25,13 +26,20 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
-  const { mutate, isPending } = useActionDeleteBillboard();
-  const onConfirm = () => {
-    mutate(data.id, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
+  const [loading, setLoading] = useState(false);
+
+  const onConfirm = async () => {
+    try {
+      setLoading(true);
+      await ky.delete(`/api/${params.storeId}/billboards/${data.id}`);
+      toast.success('Billboard deleted.');
+      router.refresh();
+    } catch (error) {
+      toast.error('Make sure you removed all categories using this billboard first.');
+    } finally {
+      setOpen(false);
+      setLoading(false);
+    }
   };
 
   const onCopy = (id: string) => {
@@ -41,7 +49,7 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
-      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={isPending} />
+      <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onConfirm} loading={loading} />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">

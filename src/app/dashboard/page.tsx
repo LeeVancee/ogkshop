@@ -1,25 +1,38 @@
-'use client';
-
+import { getSession } from '@/actions/getSession';
 import HomeLoader from '@/components/loader/home-loader';
-import { useGetStore } from '@/features/manange/api/use-get-store';
-import { useStoreModal } from '@/hooks/use-store-modal';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
-export default function DashboardPage() {
-  const { data: store, isLoading } = useGetStore();
-  const { onOpen, isOpen } = useStoreModal();
-  const router = useRouter();
+import prismadb from '@/lib/prismadb';
+import { redirect, useRouter } from 'next/navigation';
+export default async function DashboardPage() {
+  const session = await getSession();
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (!store) {
-        onOpen();
-      } else {
-        router.push(`/dashboard/${store.id}`);
-      }
-    }
-  }, [isLoading, store, router, onOpen]);
+  const adminId = session?.user.id;
+
+  // 检查用户是否已登录，以及是否是 admin 用户
+  const user = await prismadb.user.findUnique({
+    where: {
+      id: adminId,
+      role: 'ADMIN',
+    },
+  });
+
+  if (!user) {
+    redirect('/');
+  }
+
+  const store = await prismadb.store.findFirst({
+    where: {
+      adminId: adminId,
+    },
+  });
+
+  if (store) {
+    redirect(`/dashboard/${store.id}`);
+  }
+
+  if (!store) {
+    redirect('/dashboard/create');
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">

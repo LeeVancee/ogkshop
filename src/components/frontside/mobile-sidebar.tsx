@@ -1,20 +1,22 @@
 'use client';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useGetCategories } from '@/features/shop/api/use-get-categories';
-import { Category } from '@prisma/client';
+import { Category } from '@/types';
+
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
-export function MobileSidebar() {
+interface Props {
+  data: Category[];
+}
+
+export function MobileSidebar({ data }: Props) {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const handleLinkClick = () => {
     setOpen(false);
   };
-
-  const { data: categories, isLoading } = useGetCategories();
 
   return (
     <>
@@ -29,7 +31,7 @@ export function MobileSidebar() {
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Categories</h2>
               <div className="space-y-1">
-                {categories?.map((category: Category) => (
+                {data?.map((category: Category) => (
                   <Link
                     href={`/category/${category.name}`}
                     key={category.id}

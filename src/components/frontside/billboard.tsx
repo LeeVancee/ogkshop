@@ -1,17 +1,11 @@
-'use client';
 import Image from 'next/image';
 
-import { useGetBillboard } from '@/features/shop/api/use-get-billboard';
-import BillboardLoader from '../loader/billboard-loader';
+import getBillboard from '@/actions/get-billboard';
 
 const billboardId = process.env.NEXT_PUBLIC_BILLBOARD_ID;
 
-const Billboard = () => {
-  const { data: billboard, isLoading } = useGetBillboard(billboardId!);
-
-  /*  if (isLoading) {
-    return <BillboardLoader />;
-  } */
+const Billboard = async () => {
+  const billboard = await getBillboard(billboardId!);
 
   if (!billboard) {
     console.error('Billboard not found');

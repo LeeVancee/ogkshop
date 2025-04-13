@@ -15,17 +15,20 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { useParams, useRouter } from 'next/navigation';
-import { useGetStores } from '@/features/manange/api/use-get-store';
+
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
-export function ShopSwitcher() {
+interface Props {
+  items: Record<string, any>[];
+}
+
+export function ShopSwitcher({ items = [] }: Props) {
   const storeModal = useStoreModal();
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
-  const { data: items } = useGetStores();
 
-  const formattedItems = items?.map((item) => ({
+  const formattedItems = items.map((item) => ({
     label: item.name,
     value: item.id,
   }));

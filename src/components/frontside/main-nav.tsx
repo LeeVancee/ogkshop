@@ -5,7 +5,6 @@ import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Category } from '@/types';
-import { useGetCategories } from '@/features/shop/api/use-get-categories';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,9 +14,12 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 
-export default function MainNav() {
+interface MainNavProps {
+  data: Category[];
+}
+
+export default function MainNav({ data }: MainNavProps) {
   const pathname = usePathname();
-  const { data, isLoading } = useGetCategories();
 
   const routes =
     data?.map((route: Category) => ({
@@ -34,31 +36,23 @@ export default function MainNav() {
             <NavigationMenuTrigger>Collection</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="w-[200px] p-3">
-                {isLoading ? (
-                  <li className="flex items-center justify-center p-4">
-                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                {routes.map((route) => (
+                  <li key={route.href} className="mb-2">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={route.href}
+                        className={cn(
+                          'flex items-center justify-between rounded-md p-2 text-sm font-medium leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                          route.active
+                            ? 'bg-accent text-accent-foreground'
+                            : 'text-gray-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
+                        )}
+                      >
+                        {route.label}
+                      </Link>
+                    </NavigationMenuLink>
                   </li>
-                ) : routes.length > 0 ? (
-                  routes.map((route) => (
-                    <li key={route.href} className="mb-2">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href={route.href}
-                          className={cn(
-                            'flex items-center justify-between rounded-md p-2 text-sm font-medium leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-                            route.active
-                              ? 'bg-accent text-accent-foreground'
-                              : 'text-gray-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
-                          )}
-                        >
-                          {route.label}
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  ))
-                ) : (
-                  <li className="p-2 text-sm text-gray-500">No categories available</li>
-                )}
+                ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

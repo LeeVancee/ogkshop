@@ -15,7 +15,12 @@ export default function OrderList({ initialOrders }: OrderListProps) {
   const removeAll = useCart((state) => state.removeAll);
   const searchParams = useSearchParams();
 
+  // 确保客户端和服务器端渲染一致
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
+
     if (searchParams.get('success')) {
       toast.success('Payment completed.');
       removeAll();
@@ -29,6 +34,11 @@ export default function OrderList({ initialOrders }: OrderListProps) {
   const handleDeleteOrder = (orderId: string) => {
     setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
   };
+
+  // 在客户端渲染前不显示任何内容
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-y-4 p-6">

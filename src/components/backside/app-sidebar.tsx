@@ -15,12 +15,14 @@ import {
 } from '@/components/ui/sidebar';
 import { useParams, usePathname } from 'next/navigation';
 import { LayoutDashboard, Image, ListTree, Ruler, Palette, Package, ShoppingCart, Settings, User } from 'lucide-react';
-import StoreSwitcher from './store-switcher';
 import Link from 'next/link';
 import { NavUser } from './nav-user';
 import { ShopSwitcher } from './shop-switcher';
+interface Props extends React.ComponentProps<typeof Sidebar> {
+  items: Record<string, any>[];
+}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ items, ...props }: Props) {
   const pathname = usePathname();
   const params = useParams();
 
@@ -84,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         {/*   <StoreSwitcher /> */}
-        <ShopSwitcher />
+        <ShopSwitcher items={items} />
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((group) => (

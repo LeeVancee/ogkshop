@@ -4,17 +4,25 @@ import { Metadata } from 'next';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/backside/app-sidebar';
 import { Separator } from '@/components/ui/separator';
-import { getSession } from '@/features/auth/getSession';
+
 import { redirect } from 'next/navigation';
 import UnauthorisedError from '@/components/unauthorized-error';
+import { getSession } from '@/actions/getSession';
+import prismadb from '@/lib/prismadb';
 
 export const metadata: Metadata = {
   title: 'OGKSHOP - Dashboard',
 };
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { storeId: string };
+}) {
   const session = await getSession();
-
+  const adminId = session?.user.id;
   if (session?.user.role !== 'admin') {
     return <UnauthorisedError />;
   }
@@ -22,10 +30,25 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/auth');
   }
 
+  const store = await prismadb.store.findFirst({
+    where: {
+      id: params.storeId,
+    },
+  });
+
+  if (!store) {
+    redirect('/');
+  }
+  const stores = await prismadb.store.findMany({
+    where: {
+      adminId: adminId,
+    },
+  });
+
   return (
     <>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar items={stores} />
         <SidebarInset>
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between">
             <div className="flex items-center gap-x-2">

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
-import { getSession } from '@/features/auth/getSession';
+import { getSession } from '@/actions/getSession';
 
 export async function DELETE(req: Request, props: { params: Promise<{ orderId: string; storeId: string }> }) {
   try {

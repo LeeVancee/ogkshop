@@ -15,20 +15,17 @@ import { useEffect, useState } from 'react';
 import { Product } from '@/types';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
-import { useGetProducts } from '@/features/shop/api/use-get-products';
+
 import { DialogTitle } from '@/components/ui/dialog';
 
 interface SearchModalProps {
   products: Product[];
 }
 
-const STORE_ID = process.env.NEXT_PUBLIC_STORE_ID!;
-export function SearchModal() {
+export function SearchModal({ products }: SearchModalProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
-
-  const { data: products, isLoading } = useGetProducts({ storeId: STORE_ID });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

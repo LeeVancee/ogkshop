@@ -10,47 +10,59 @@ export default async function OrdersPage() {
   const session = await getSession();
   const userId = session?.user.id;
 
-  if (!userId) {
-    return null; // 或者重定向到登录页
-  }
+  // 即使未登录用户也返回空数组，而不是 null
+  let formattedOrders: OrderColumn[] = [];
 
-  const orders = await prismadb.order.findMany({
-    where: {
-      userId: userId, // 添加 userId 作为查询条件
-    },
-    include: {
-      orderItems: {
-        include: {
-          product: {
-            include: {
-              images: true,
-              sizes: true,
+  if (userId) {
+    const orders = await prismadb.order.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        orderItems: {
+          include: {
+            product: {
+              include: {
+                images: true,
+                sizes: true,
+              },
             },
           },
         },
       },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
 
-  const formattedOrders: OrderColumn[] = orders.map((item) => ({
-    id: item.id,
-    phone: item.phone,
-    address: item.address,
-    products: item.orderItems.map((orderItem) => orderItem.product.name).join(', '),
-    image: item.orderItems[0].product.images[0].url,
+    formattedOrders = orders.map((item) => {
+      // 确保订单项和图片存在
+      const hasOrderItems = item.orderItems && item.orderItems.length > 0;
+      const hasImages =
+        hasOrderItems && item.orderItems[0].product.images && item.orderItems[0].product.images.length > 0;
 
-    totalPrice: formatter.format(
-      item.orderItems.reduce((total, orderItem) => {
-        return total + orderItem.product.price * orderItem.quantity;
-      }, 0)
-    ),
+      return {
+        id: item.id,
+        phone: item.phone || '',
+        address: item.address || '',
+        products: hasOrderItems
+          ? item.orderItems.map((orderItem) => orderItem.product.name || 'Product').join(', ')
+          : '',
+        image: hasImages ? item.orderItems[0].product.images[0].url : '/placeholder.jpg', // 使用占位图片
 
-    isPaid: item.isPaid,
-    createdAt: format(item.createdAt, 'MMMM do, yyyy'),
-  }));
+        totalPrice: formatter.format(
+          hasOrderItems
+            ? item.orderItems.reduce((total, orderItem) => {
+                return total + (orderItem.product.price || 0) * (orderItem.quantity || 1);
+              }, 0)
+            : 0
+        ),
+
+        isPaid: item.isPaid || false,
+        createdAt: format(item.createdAt, 'MMMM do, yyyy'),
+      };
+    });
+  }
 
   return (
     <Container className="min-h-screen">

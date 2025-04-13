@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Truck, Package, MapPin, Phone, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
@@ -26,16 +26,28 @@ interface OrderProps {
 }
 
 export default function OrderCard({ order }: OrderProps) {
-  const { data: session } = authClient.useSession();
+  const session = authClient.useSession();
   const { id, phone, address, products, image, totalPrice, isPaid, createdAt } = order;
 
   const [open, setOpen] = useState(false);
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const isPending = isPaymentLoading || isDeleteLoading;
+  const isPending = isPaymentLoading || isDeleteLoading || session.isPending;
+
+  // 确保客户端和服务器端渲染一致
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 在客户端渲染前不显示任何内容
+  if (!isMounted) {
+    return null;
+  }
 
   const handlePay = async () => {
-    if (!session?.user) {
+    if (!session.data?.user) {
       toast.error('Please log in to proceed with the checkout.');
       return;
     }

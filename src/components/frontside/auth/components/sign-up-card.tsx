@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 import { authClient } from '@/lib/auth-client';
-import { setUserRole } from '@/features/auth/action';
+import { setUserRole } from '@/actions/set-userRole';
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
